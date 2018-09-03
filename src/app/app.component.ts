@@ -10,7 +10,7 @@ export class AppComponent {
   title = 'simple-shopping-list';
   update = false;
 
-  // test 1
+  // test 123
 
   constructor(swUpdate: SwUpdate) {
     swUpdate.available.subscribe(() => {});
