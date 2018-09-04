@@ -10,8 +10,12 @@
             }
       
             .quantity-form-field {
-                width: 100px;
-              flex-grow: 1;
+                width: 48px;
+                flex-grow: 1;
+            }
+
+            .add-item-button {
+                align-self: center;
             }
           }
     }
