@@ -15,7 +15,7 @@ interface ShoppingList {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'simple-shopping-list';
+  title = 'Simple Shopping List';
 
   itemName = '';
   quantity = null;
