@@ -9,7 +9,7 @@ export const environment = {
     authDomain: 'simpleshoppinglist-ba6e8.firebaseapp.com',
     databaseURL: 'https://simpleshoppinglist-ba6e8.firebaseio.com',
     projectId: 'simpleshoppinglist-ba6e8',
-    storageBucket: '',
+    storageBucket: 'simpleshoppinglist-ba6e8.appspot.com',
     messagingSenderId: '444277130466'
   }
 };
