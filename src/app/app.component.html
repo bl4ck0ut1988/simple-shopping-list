@@ -5,10 +5,10 @@
 	</div>
  
 	<div style="width: 300px;">
-		<form (ngSubmit)="onSubmit()">
+		<form>
 			<div class="form-group">
 				<input type="text"
-					class="form-control" placeholder="Item Name..." id="item"
+					class="form-control name-input" placeholder="Item Name..." id="item"
           required [(ngModel)]="itemName" name="item">
         <input type="text"
 					class="form-control" placeholder="Quantity..."
@@ -16,15 +16,19 @@
 			</div>
  
 			<div class="btn-group">
-        <button type="submit" class="btn first btn-success">Add Item</button>
-        <button (click)="onDelete()" class="btn">Clear List</button>
+        <button (click)="onAddItem()" class="btn first btn-success">Add Item</button>
 			</div>
 		</form>
 	</div>
  
 	<h2>Items to Shop:</h2>
 	<div class="col-md-3">
-		<p *ngFor="let item of items | async">{{item | json}}</p>
-	</div>
+    <p *ngIf="temporaryItems.length < 1">No Items added to the List</p>
+		<p *ngFor="let item of temporaryItems">{{item | json}}</p>
+  </div>
+  <div class="btn-group">
+      <button (click)="onSave()" class="btn first">Save List</button>
+      <button (click)="onDelete()" class="btn">Delete List</button>
+  </div>
 </div>
 
