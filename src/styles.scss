@@ -1,6 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
+$default-padding: 12px;
+$default-margin: 12px;
+
+* {
+    font-family: 'Roboto Mono', monospace;
+}
+
+h1 {
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: 'Roboto Condensed', sans-serif;
+    background-color: #C5CAE9;
+    ;
+}
+
+mat-card {
+    margin-top: $default-margin * 2;
+
+    .mat-card-header-text {
+        margin: 0;
+    }
+
+    .mat-card-actions {
+        margin-bottom: 0 !important;
+        padding: $default-padding;
+    }
+}
+
+mat-form-field {
+    margin-right: $default-margin;
 }

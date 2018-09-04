@@ -1,30 +1,66 @@
-<div class="container-fluid">
-  <h1>{{title}}</h1>
-	<div style="width: 300px;">
-		<form>
-			<div class="form-group">
-				<input type="text"
-					class="form-control name-input" placeholder="Item Name..." id="item"
-          required [(ngModel)]="itemName" name="item">
-        <input type="text"
-					class="form-control" placeholder="Quantity..."
-					required [(ngModel)]="quantity" name="quantity">
-			</div>
- 
-			<div class="btn-group">
-        <button (click)="onAddItem()" class="btn first btn-success">Add Item</button>
-			</div>
-		</form>
-	</div>
- 
-	<h2>Items to Shop:</h2>
-	<div class="col-md-3">
-    <p *ngIf="temporaryItems.length < 1">No Items added to the List</p>
-		<p *ngFor="let item of temporaryItems">{{item | json}}</p>
-  </div>
-  <div class="btn-group">
-      <button (click)="onSave()" class="btn first">Save List</button>
-      <button (click)="onDelete()" class="btn">Delete List</button>
-  </div>
+<div>
+  <mat-card class="add-item-card">
+    <mat-card-content>
+      <form>
+          <div class="form-group add-item-content">
+            <mat-form-field class="name-form-field">
+                <input
+                  matInput
+                  type="text"
+                  class="form-control name-input"
+                  placeholder="Item"
+                  id="item"
+                  [(ngModel)]="itemName"
+                  name="item">
+            </mat-form-field>
+            <mat-form-field class="quantity-form-field">
+                <input
+                  matInput
+                  type="text"
+                  class="form-control"
+                  placeholder="Quantity"
+                  [(ngModel)]="quantity"
+                  name="quantity">
+            </mat-form-field>
+            <button
+            class="add-item-button"
+              mat-icon-button
+              (click)="onAddItem()"
+              color="primary"
+              [disabled]="!(itemName && quantity)">
+              <mat-icon>add_circle</mat-icon>        
+            </button>
+          </div>
+        </form>
+    </mat-card-content>
+  </mat-card>		
+
+ <mat-card class="item-list-card">
+   <mat-card-header>
+    	<h1>Shopping List</h1>
+   </mat-card-header>
+   <mat-card-content>
+          <p class="empty-text" *ngIf="temporaryItems?.length < 1">List is empty ...</p>
+          <mat-selection-list  *ngIf="temporaryItems?.length > 0" #shoppingItems>
+              <mat-list-option *ngFor="let item of temporaryItems">
+                  {{formatItemString(item)}}
+              </mat-list-option>
+          </mat-selection-list>
+   </mat-card-content>
+   <mat-card-actions>
+      <button
+        (click)="onSave()"
+        class="btn first save-button"
+        mat-raised-button
+        color="primary"
+        [disabled]="temporaryItems.length < 1">Save List</button>
+      <button
+        (click)="onDelete()"
+        class="btn delete-button"
+        mat-raised-button
+        color="warn"
+        [disabled]="temporaryItems.length < 1">Delete List</button>
+   </mat-card-actions>
+ </mat-card>
 </div>
 

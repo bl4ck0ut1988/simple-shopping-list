@@ -17,8 +17,10 @@ interface ShoppingList {
 export class AppComponent implements OnInit {
   title = 'Simple Shopping List';
 
+  defaultQuantity = 1;
+
   itemName = '';
-  quantity = null;
+  quantity = this.defaultQuantity;
 
   itemCollection: AngularFirestoreCollection<any>;
   list: AngularFirestoreDocument<ShoppingList>;
@@ -60,7 +62,7 @@ export class AppComponent implements OnInit {
   onAddItem(): void {
     this.temporaryItems.push({ name: this.itemName, quantity: this.quantity });
     this.itemName = '';
-    this.quantity = null;
+    this.quantity = this.defaultQuantity;
   }
 
   onSave(): void {
@@ -77,5 +79,9 @@ export class AppComponent implements OnInit {
       this.temporaryItems = [];
       this.list.delete();
     }
+  }
+
+  formatItemString(item: any): string {
+    return `${item.quantity}x ${item.name}`;
   }
 }

@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatCardModule } from '@angular/material';
+import { MatInputModule, MatButtonModule, MatCardModule, MatListModule, MatIconModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,9 @@ import { MatInputModule, MatButtonModule, MatCardModule } from '@angular/materia
     AngularFirestoreModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatIconModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

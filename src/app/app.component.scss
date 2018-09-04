@@ -1,11 +1,41 @@
 :host{
-    .name-input {
-        margin-bottom: 12px;
+
+    .add-item-card {
+        padding: 12px;
+        .add-item-content {
+            display: flex;
+      
+            .name-form-field {
+              flex-grow: 5;
+            }
+      
+            .quantity-form-field {
+                width: 100px;
+              flex-grow: 1;
+            }
+          }
     }
-    .btn-group {
-        margin-top: 12px;
-        .first {
-            margin-right: 12px;
+
+    .item-list-card {
+        h1 {
+            font-size: 28px;
         }
+
+        .empty-text {
+            margin: 24px 0;
+            color: gray;
+        }
+    }
+
+    .first {
+        margin-right: 12px;
+    }
+
+    .save-button {
+        color: white;
+    }
+
+    .delete-button {
+        color: white;
     }
 }
