@@ -22,12 +22,16 @@
 
     .item-list-card {
         h1 {
-            font-size: 28px;
+            font-size: 24px;
         }
 
         .empty-text {
             margin: 24px 0;
             color: gray;
+        }
+
+        .edit-list-title-button {
+            margin-left: 12px;
         }
     }
 

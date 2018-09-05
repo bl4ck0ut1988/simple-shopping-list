@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { AngularFirestore, CollectionReference, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs';
+import { MyGlobals } from './myglobals';
 
 interface ShoppingList {
   list: any[];
@@ -20,6 +22,7 @@ export class AppComponent implements OnInit {
   defaultQuantity = 1;
 
   itemName = '';
+  listName = MyGlobals.DEFAULT_LIST_TITLE;
   quantity = this.defaultQuantity;
 
   itemCollection: AngularFirestoreCollection<any>;
@@ -29,6 +32,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     // private cr: CollectionReference,
+    public dialog: MatDialog,
     private afs: AngularFirestore,
     private swUpdate: SwUpdate
   ) {}
@@ -47,6 +51,7 @@ export class AppComponent implements OnInit {
       // this.items = lists[0].list;
       if (lists.length >= 1) {
         this.temporaryItems = lists[0].list;
+        this.listName = lists[0].name;
       } else {
         this.temporaryItems = [];
       }
@@ -59,6 +64,17 @@ export class AppComponent implements OnInit {
     });
   }
 
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ChangeTitleDialogComponent, {
+      width: '250px',
+      data: {name: 'this.name', animal: 'this.animal'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
   onAddItem(): void {
     this.temporaryItems.push({ name: this.itemName, quantity: this.quantity });
     this.itemName = '';
@@ -68,7 +84,7 @@ export class AppComponent implements OnInit {
   onSave(): void {
     this.itemCollection.doc('testList').set({
       list: this.temporaryItems,
-      name: 'testList'
+      name: this.listName
     });
   }
 
@@ -76,6 +92,7 @@ export class AppComponent implements OnInit {
     this.list = this.afs.doc('lists/testList');
 
     if (this.list) {
+      this.listName = MyGlobals.DEFAULT_LIST_TITLE;
       this.temporaryItems = [];
       this.list.delete();
     }
@@ -84,4 +101,20 @@ export class AppComponent implements OnInit {
   formatItemString(item: any): string {
     return `${item.quantity}x ${item.name}`;
   }
+}
+
+@Component({
+  selector: 'change-title-dialog-component',
+  templateUrl: 'change-title-dialog-component.html',
+})
+export class ChangeTitleDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<ChangeTitleDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
 }
