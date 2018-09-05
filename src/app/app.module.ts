@@ -15,7 +15,9 @@ import {
   MatButtonModule,
   MatCardModule,
   MatListModule,
-  MatIconModule
+  MatIconModule,
+  MatProgressBarModule,
+  MatToolbarModule
 } from '@angular/material';
 
 @NgModule({
@@ -38,7 +40,9 @@ import {
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatProgressBarModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

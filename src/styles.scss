@@ -1,8 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-
-$default-padding: 12px;
-$default-margin: 12px;
+@import "variables.scss";
 
 * {
     font-family: 'Roboto Mono', monospace;
@@ -15,6 +13,7 @@ h1 {
 
 body {
     display: flex;
+    padding-bottom: 60px;
     justify-content: center;
     app-root {
         width: 100%;
@@ -37,7 +36,7 @@ mat-card {
     }
 }
 
-mat-form-field {
+mat-form-field:not(:last-child) {
     margin-right: $default-margin;
 }
 
@@ -49,7 +48,10 @@ mat-list-option {
     .mat-pseudo-checkbox-checked + .mat-list-text {
         color: lightgrey;
     }
+}
 
+mat-selection-list {
+    padding-top: 0 !important; 
 }
 
 mat-list-option:not(:last-child) {

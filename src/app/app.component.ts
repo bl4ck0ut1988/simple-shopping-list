@@ -25,6 +25,9 @@ export class AppComponent implements OnInit {
   listName = MyGlobals.DEFAULT_LIST_TITLE;
   quantity = this.defaultQuantity;
 
+  editMode = false;
+  listLoading = false;
+
   itemCollection: AngularFirestoreCollection<any>;
   list: AngularFirestoreDocument<ShoppingList>;
   temporaryItems: any[] = [];
@@ -79,14 +82,32 @@ export class AppComponent implements OnInit {
 
   onAddItem(): void {
     this.temporaryItems.push({ name: this.itemName, quantity: this.quantity });
+    this.resetAddItemFields();
+  }
+
+  private resetAddItemFields(): void {
     this.itemName = '';
     this.quantity = this.defaultQuantity;
   }
 
+  onEdit(): void {
+    this.editMode = true;
+  }
+
+  onDismiss(): void {
+    this.editMode = false;
+  }
+
   onSave(): void {
+    this.listLoading = true;
+
     this.itemCollection.doc('testList').set({
       list: this.temporaryItems,
       name: this.listName
+    }).then(() => {
+      this.listLoading = false;
+      this.editMode = false;
+      this.resetAddItemFields();
     });
   }
 
