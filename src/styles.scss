@@ -40,3 +40,18 @@ mat-card {
 mat-form-field {
     margin-right: $default-margin;
 }
+
+mat-list-option {
+    .mat-pseudo-checkbox-checked {
+        background-color: #673ab7;
+    } 
+
+    .mat-pseudo-checkbox-checked + .mat-list-text {
+        color: lightgrey;
+    }
+
+}
+
+mat-list-option:not(:last-child) {
+    border-bottom: solid 1px #EEEEEE;
+}

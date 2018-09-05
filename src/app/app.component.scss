@@ -21,8 +21,12 @@
     }
 
     .item-list-card {
-        h1 {
-            font-size: 24px;
+        .item-list-card-header {
+            display: flex;
+            align-items: center;
+            h1 {
+                font-size: 24px;
+            }
         }
 
         .empty-text {

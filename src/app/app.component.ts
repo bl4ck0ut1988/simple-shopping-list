@@ -60,7 +60,9 @@ export class AppComponent implements OnInit {
     this.list = this.afs.doc('lists/testList');
 
     this.list.valueChanges().subscribe(list => {
-      this.temporaryItems = list.list;
+      if (list) {
+        this.temporaryItems = list.list;
+      }
     });
   }
 

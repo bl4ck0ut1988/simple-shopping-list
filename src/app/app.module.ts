@@ -8,7 +8,15 @@ import { AppComponent, ChangeTitleDialogComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule, MatInputModule, MatButtonModule, MatCardModule, MatListModule, MatIconModule } from '@angular/material';
+import {
+  MatDialogModule,
+  MatDividerModule,
+  MatInputModule,
+  MatButtonModule,
+  MatCardModule,
+  MatListModule,
+  MatIconModule
+} from '@angular/material';
 
 @NgModule({
   entryComponents: [AppComponent, ChangeTitleDialogComponent],
@@ -25,6 +33,7 @@ import { MatDialogModule, MatInputModule, MatButtonModule, MatCardModule, MatLis
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     MatDialogModule,
+    MatDividerModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,

@@ -2,41 +2,41 @@
   <mat-card class="add-item-card">
     <mat-card-content>
       <form>
-          <div class="form-group add-item-content">
-            <mat-form-field class="name-form-field">
-                <input
-                  matInput
-                  type="text"
-                  class="form-control name-input"
-                  placeholder="Item"
-                  id="item"
-                  [(ngModel)]="itemName"
-                  name="item">
-            </mat-form-field>
-            <mat-form-field class="quantity-form-field">
-                <input
-                  matInput
-                  type="text"
-                  class="form-control"
-                  placeholder="Quantity"
-                  [(ngModel)]="quantity"
-                  name="quantity">
-            </mat-form-field>
-            <button
-            class="add-item-button"
-              mat-icon-button
-              (click)="onAddItem()"
-              color="primary"
-              [disabled]="!(itemName && quantity)">
-              <mat-icon>add_circle</mat-icon>        
-            </button>
-          </div>
-        </form>
+        <div class="form-group add-item-content">
+          <mat-form-field class="name-form-field">
+              <input
+                matInput
+                type="text"
+                class="form-control name-input"
+                placeholder="Item"
+                id="item"
+                [(ngModel)]="itemName"
+                name="item">
+          </mat-form-field>
+          <mat-form-field class="quantity-form-field">
+              <input
+                matInput
+                type="text"
+                class="form-control"
+                placeholder="Quantity"
+                [(ngModel)]="quantity"
+                name="quantity">
+          </mat-form-field>
+          <button
+          class="add-item-button"
+            mat-icon-button
+            (click)="onAddItem()"
+            color="primary"
+            [disabled]="!(itemName && quantity)">
+            <mat-icon>add_circle</mat-icon>        
+          </button>
+        </div>
+      </form>
     </mat-card-content>
   </mat-card>		
 
  <mat-card class="item-list-card">
-   <mat-card-header>
+   <mat-card-header class="item-list-card-header">
       <h1>{{ listName }}</h1>
       <button
             class="edit-list-title-button"
@@ -48,9 +48,9 @@
    <mat-card-content>
           <p class="empty-text" *ngIf="temporaryItems?.length < 1">List is empty ...</p>
           <mat-selection-list  *ngIf="temporaryItems?.length > 0" #shoppingItems>
-              <mat-list-option *ngFor="let item of temporaryItems">
-                  {{formatItemString(item)}}
-              </mat-list-option>
+            <mat-list-option *ngFor="let item of temporaryItems">
+                {{formatItemString(item)}}
+            </mat-list-option>
           </mat-selection-list>
    </mat-card-content>
    <mat-card-actions>
