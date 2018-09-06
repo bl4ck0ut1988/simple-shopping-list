@@ -1,68 +1,60 @@
-<div>
-  <!-- <mat-card *ngIf="editMode" class="add-item-card">
-    <mat-card-content>
-      <form>
-          <div class="form-group add-item-content">
-              <mat-form-field class="name-form-field">
-                  <input
-                    matInput
-                    type="text"
-                    class="form-control name-input"
-                    placeholder="List Name"
-                    id="item"
-                    [(ngModel)]="listName"
-                    name="listName">
-              </mat-form-field>
-            </div>
-        <div class="form-group add-item-content">
-          <mat-form-field class="name-form-field">
-              <input
-                matInput
-                type="text"
-                class="form-control name-input"
-                placeholder="Item"
-                id="item"
-                [(ngModel)]="itemName"
-                name="item">
-          </mat-form-field>
-          <mat-form-field class="quantity-form-field">
-              <input
-                matInput
-                type="text"
-                class="form-control"
-                placeholder="Quantity"
-                [(ngModel)]="quantity"
-                name="quantity">
-          </mat-form-field>
-          <button
-          class="add-item-button"
-            mat-icon-button
-            (click)="onAddItem()"
-            color="primary"
-            [disabled]="!(itemName && quantity)">
-            <mat-icon>add_circle</mat-icon>        
-          </button>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>		 -->
+<div class='header-bar'>
+  <button
+    mat-icon-button
+    class="list-menu-button"
+    [matMenuTriggerFor]="appMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #appMenu="matMenu">
+      <button mat-menu-item disabled>
+          <mat-icon>playlist_add</mat-icon>
+          <span>Add List</span>
+        </button>
+      <button mat-menu-item disabled>
+        <mat-icon>playlist_play</mat-icon>
+        <span>Select List</span>
+      </button>
+      <button mat-menu-item disabled>
+        <mat-icon>color_lens</mat-icon>
+        <span>Change Theme</span>
+      </button>
+    </mat-menu>
+  <h1>Simple Checklists</h1>
+</div>
 
+<div>
  <mat-card class="item-list-card">
-    <mat-progress-bar *ngIf="listLoading" mode="indeterminate"></mat-progress-bar>
    <mat-card-header class="item-list-card-header">
-      <h1>{{ listName }}</h1>
-      <button
+      <h1 class="underline">{{ listName }}</h1>
+      <mat-spinner *ngIf="listLoading" class="list-loader" [diameter]="24"></mat-spinner>
+      <!-- <button
         class="edit-list-title-button"
         mat-raised-button
         (click)="onEdit()"
         [disabled]="editMode"
         color="primary">
         Edit
-        <!-- <mat-icon>edit</mat-icon>         -->
+      </button> -->
+      <button
+      mat-icon-button
+      class="edit-list-title-button"
+      [disabled]="editMode"
+      [matMenuTriggerFor]="listMenu">
+        <mat-icon>edit</mat-icon>
       </button>
+      <mat-menu #listMenu="matMenu">
+        <button mat-menu-item (click)="openDialog()">
+          <mat-icon>edit</mat-icon>
+          <span>Rename List</span>
+        </button>
+        <button mat-menu-item (click)="onEdit()">
+          <mat-icon>list</mat-icon>
+          <span>Edit Items</span>
+        </button>
+      </mat-menu>
    </mat-card-header>
    
-   <mat-card-content>
+   <mat-card-content class="list-content">
           <p class="empty-text" *ngIf="temporaryItems?.length < 1">List is empty ...</p>
           <mat-selection-list  *ngIf="temporaryItems?.length > 0" #shoppingItems>
             <mat-list-option *ngFor="let item of temporaryItems">
@@ -74,7 +66,7 @@
 </div>
 
 <mat-toolbar *ngIf="editMode" class='footer-bar' color="primary">
-    <mat-toolbar-row class="first-toolbar-row">
+    <!-- <mat-toolbar-row class="first-toolbar-row">
       <div class="add-item-row">
         <mat-form-field class="list-title-form-field">
           <input
@@ -87,8 +79,8 @@
             name="listName">
         </mat-form-field>
       </div>
-    </mat-toolbar-row>
-  <mat-toolbar-row class="second-toolbar-row">
+    </mat-toolbar-row> -->
+  <mat-toolbar-row class="first-toolbar-row">
     <div class="add-item-row">
       <mat-form-field class="name-form-field">
           <input
@@ -119,16 +111,12 @@
       </button>
     </div>
   </mat-toolbar-row>
-  <mat-toolbar-row class="third-toolbar-row">
+  <mat-toolbar-row class="second-toolbar-row">
       <button
-      (click)="onSave()"
+      (click)="onClose()"
       class="btn first save-button"
       mat-raised-button
-      color="primary">Save & Close</button>
-      <button
-      mat-button
-      (click)="onDismiss()"
-      class="btn dismiss-button">Cancel Edit</button>
+      color="primary">Leave Edit Mode</button>
   </mat-toolbar-row>
 </mat-toolbar>
 

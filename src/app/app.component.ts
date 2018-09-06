@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { AngularFirestore, CollectionReference, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog, MatIconRegistry, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { AngularFireDatabase } from 'angularfire2/database';
+import {DomSanitizer} from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { MyGlobals } from './myglobals';
 
@@ -11,14 +12,17 @@ interface ShoppingList {
   name: string;
 }
 
+interface SvgIcon {
+  name: string;
+  path: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Simple Shopping List';
-
   defaultQuantity = 1;
 
   itemName = '';
@@ -31,14 +35,32 @@ export class AppComponent implements OnInit {
   itemCollection: AngularFirestoreCollection<any>;
   list: AngularFirestoreDocument<ShoppingList>;
   temporaryItems: any[] = [];
-  // test 123
+
+  svgIcons: SvgIcon[] = [
+    {
+      name: 'chicken-drum-stick',
+      path: 'food-chicken-drum-stick.svg'
+    },
+    {
+      name: 'nature-plant',
+      path: 'nature-plant-1.svg'
+    },
+  ];
 
   constructor(
     // private cr: CollectionReference,
     public dialog: MatDialog,
     private afs: AngularFirestore,
-    private swUpdate: SwUpdate
-  ) {}
+    private swUpdate: SwUpdate,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer
+  ) {
+    this.svgIcons.forEach(icon => {
+      iconRegistry.addSvgIcon(
+        icon.name,
+        sanitizer.bypassSecurityTrustResourceUrl(`/assets/nova_icons/solid/${icon.path}`));
+    });
+  }
 
   ngOnInit(): void {
     this.swUpdate.available.subscribe(() => {});
@@ -72,17 +94,27 @@ export class AppComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(ChangeTitleDialogComponent, {
       width: '250px',
-      data: {name: 'this.name', animal: 'this.animal'}
+      data: {title: this.listName}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      if (result) {
+        this.listName = result;
+      }
     });
   }
 
   onAddItem(): void {
+    this.listLoading = true;
     this.temporaryItems.push({ name: this.itemName, quantity: this.quantity });
-    this.resetAddItemFields();
+
+    this.itemCollection.doc('testList').set({
+      list: this.temporaryItems,
+      name: this.listName
+    }).then(() => {
+      this.resetAddItemFields();
+      this.listLoading = false;
+    });
   }
 
   private resetAddItemFields(): void {
@@ -98,17 +130,8 @@ export class AppComponent implements OnInit {
     this.editMode = false;
   }
 
-  onSave(): void {
-    this.listLoading = true;
-
-    this.itemCollection.doc('testList').set({
-      list: this.temporaryItems,
-      name: this.listName
-    }).then(() => {
-      this.listLoading = false;
-      this.editMode = false;
-      this.resetAddItemFields();
-    });
+  onClose(): void {
+    this.editMode = false;
   }
 
   onDelete(): void {

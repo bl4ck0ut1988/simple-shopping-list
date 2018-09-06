@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -16,7 +17,9 @@ import {
   MatCardModule,
   MatListModule,
   MatIconModule,
+  MatMenuModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatToolbarModule
 } from '@angular/material';
 
@@ -34,6 +37,7 @@ import {
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFirestoreModule,
+    HttpClientModule,
     MatDialogModule,
     MatDividerModule,
     MatInputModule,
@@ -41,7 +45,9 @@ import {
     MatCardModule,
     MatIconModule,
     MatListModule,
+    MatMenuModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatToolbarModule
   ],
   providers: [],
