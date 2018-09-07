@@ -25,7 +25,7 @@
 <div>
  <mat-card class="item-list-card">
    <mat-card-header class="item-list-card-header">
-      <h1 class="underline">{{ listName }}</h1>
+      <h1 class="underline">{{ selectedListName }}</h1>
       <mat-spinner *ngIf="listLoading" class="list-loader" [diameter]="24"></mat-spinner>
       <button
       mat-icon-button
@@ -47,9 +47,9 @@
    </mat-card-header>
    
    <mat-card-content class="list-content">
-          <p class="empty-text" *ngIf="temporaryItems?.length < 1">List is empty ...</p>
-          <mat-selection-list  *ngIf="temporaryItems?.length > 0" #shoppingItems>
-            <mat-list-option *ngFor="let item of temporaryItems">
+          <p class="empty-text" *ngIf="selectedListItems?.length < 1">List is empty ...</p>
+          <mat-selection-list  *ngIf="selectedListItems?.length > 0" #shoppingItems>
+            <mat-list-option *ngFor="let item of selectedListItems">
                 {{formatItemString(item)}}
             </mat-list-option>
           </mat-selection-list>
