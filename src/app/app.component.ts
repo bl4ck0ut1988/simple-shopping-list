@@ -26,10 +26,15 @@ interface SvgIcon {
 export class AppComponent implements OnInit {
   defaultQuantity = 1;
 
+  // Add Item Dialog Props
   itemName = '';
-  listName = MyGlobals.DEFAULT_LIST_TITLE;
   quantity = this.defaultQuantity;
 
+  // Selected List Props
+  selectedList: AngularFirestoreDocument<ShoppingList>;
+  selectedListId: string;
+  selectedListName = MyGlobals.DEFAULT_LIST_TITLE;
+  selectedListItems: any[] = [];
   selectedListSubscription: Subscription;
 
   editMode = false;
@@ -39,8 +44,6 @@ export class AppComponent implements OnInit {
   listsArray: any[] = [];
 
   itemCollection: AngularFirestoreCollection<any>;
-  selectedList: AngularFirestoreDocument<ShoppingList>;
-  temporaryItems: any[] = [];
 
   svgIcons: SvgIcon[] = [
     {
@@ -73,20 +76,6 @@ export class AppComponent implements OnInit {
 
     this.itemCollection = this.afs.collection('lists');
 
-    // this.itemCollection = this.afs.collection('lists', ref => {
-    //   // use query on collection
-    //   return ref.where('name', '==', 'firstList');
-    // });
-
-    this.itemCollection.valueChanges().subscribe(lists => {
-      if (lists.length >= 1) {
-        this.temporaryItems = lists[0].list;
-        this.listName = lists[0].name;
-      } else {
-        this.temporaryItems = [];
-      }
-    });
-
     this.itemCollection.snapshotChanges().subscribe(changes => {
       changes.forEach(change => {
         const listId = change.payload.doc.id;
@@ -111,14 +100,15 @@ export class AppComponent implements OnInit {
       width: '250px',
       data: {
         title: 'Rename List',
-        defaultValue: this.listName,
+        defaultValue: this.selectedListName,
         actionButtonLabel: 'Rename'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.listName = result;
+        this.selectedListName = result;
+        this.setDocument(this.selectedListId, this.selectedListName, this.selectedListItems);
       }
     });
   }
@@ -142,24 +132,28 @@ export class AppComponent implements OnInit {
 
   onAddItem(): void {
     this.listLoading = true;
-    this.temporaryItems.push({ name: this.itemName, quantity: this.quantity });
 
-    this.itemCollection.doc('testList').set({
-      list: this.temporaryItems,
-      name: this.listName
-    }).then(() => {
+    const tempList = this.selectedListItems.concat();
+    tempList.push({ name: this.itemName, quantity: this.quantity });
+
+    this.setDocument(this.selectedListId, this.selectedListName, tempList)
+    .then(() => {
       this.resetAddItemFields();
       this.listLoading = false;
+    });
+  }
+
+  private setDocument(id: string, listName: string, items: any[]): Promise<void> {
+    return this.itemCollection.doc(id).set({
+      list: items,
+      name: listName
     });
   }
 
   private createDocument(listName: string, items: any[]) {
     // TODO: add loading indicator on top level
     const id = this.afs.createId();
-    this.itemCollection.doc(id).set({
-      list: items,
-      name: listName
-    }).then(() => {
+    this.setDocument(id, listName, items).then(() => {
       // reset top level loading indicator
       this.setSelectedListAndSubscribe(id);
     });
@@ -170,11 +164,13 @@ export class AppComponent implements OnInit {
       this.selectedListSubscription.unsubscribe();
     }
 
-    this.selectedList = this.afs.doc(`lists/${listId}`);
+    this.selectedList = this.itemCollection.doc(listId);
 
     this.selectedListSubscription = this.selectedList.valueChanges().subscribe(list => {
       if (list) {
-        this.temporaryItems = list.list;
+        this.selectedListName = list.name;
+        this.selectedListId = listId;
+        this.selectedListItems = list.list;
       }
     });
   }
@@ -200,8 +196,8 @@ export class AppComponent implements OnInit {
     this.selectedList = this.afs.doc('lists/testList');
 
     if (this.selectedList) {
-      this.listName = MyGlobals.DEFAULT_LIST_TITLE;
-      this.temporaryItems = [];
+      this.selectedListName = MyGlobals.DEFAULT_LIST_TITLE;
+      this.selectedListItems = [];
       this.selectedList.delete();
     }
   }
