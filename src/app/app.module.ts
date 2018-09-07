@@ -11,12 +11,21 @@ import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
+import { SelectValueDialogComponent } from './dialogs/select-value-dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
 
 @NgModule({
-  entryComponents: [AppComponent, SetValueDialogComponent],
+  entryComponents: [
+    AppComponent,
+    SetValueDialogComponent,
+    SelectValueDialogComponent,
+    ConfirmDialogComponent
+  ],
   declarations: [
     AppComponent,
-    SetValueDialogComponent
+    SetValueDialogComponent,
+    SelectValueDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
   BrowserModule,

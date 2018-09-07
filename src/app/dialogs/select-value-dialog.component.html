@@ -1,10 +1,14 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.defaultValue">
-  </mat-form-field>
+      <mat-select placeholder="Lists" [(ngModel)]="selectedList" name="list">
+        <mat-option *ngFor="let list of data.lists" [value]="list">
+          {{list.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button [mat-dialog-close]="data.defaultValue" cdkFocusInitial color="primary">{{data.actionButtonLabel}}</button>
+  <button mat-button [mat-dialog-close]="selectedList" cdkFocusInitial color="primary">{{data.actionButtonLabel}}</button>
 </div>

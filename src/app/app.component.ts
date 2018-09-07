@@ -2,6 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
+import { SelectValueDialogComponent } from './dialogs/select-value-dialog.component';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
 import { MatDialog, MatIconRegistry } from '@angular/material';
 import { AngularFireDatabase } from 'angularfire2/database';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -83,7 +85,7 @@ export class AppComponent implements OnInit {
         this.listsArray.push(
           {
             id: listId,
-            data: change.payload.doc.data().name
+            name: change.payload.doc.data().name
           }
         );
       });
@@ -92,7 +94,7 @@ export class AppComponent implements OnInit {
       console.log('listsArray:', this.listsArray);
     });
 
-    this.setSelectedListAndSubscribe('testList');
+    // this.setSelectedListAndSubscribe('testList');
   }
 
   openSetTitleDialog(): void {
@@ -126,6 +128,23 @@ export class AppComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.createDocument(result, []);
+      }
+    });
+  }
+
+  openSelectListDialog(): void {
+    const dialogRef = this.dialog.open(SelectValueDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Select List',
+        lists: this.listsArray,
+        actionButtonLabel: 'Select'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.setSelectedListAndSubscribe(result.id);
       }
     });
   }
@@ -180,8 +199,27 @@ export class AppComponent implements OnInit {
     this.quantity = this.defaultQuantity;
   }
 
-  onEdit(): void {
+  onEditList(): void {
     this.editMode = true;
+  }
+
+  onDeleteList(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Do you really want to delete this list ?',
+        actionButtonLabel: 'Delete'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && this.selectedList) {
+        this.selectedListName = '';
+        this.selectedListItems = [];
+        this.selectedList.delete();
+        this.selectedList = null;
+      }
+    });
   }
 
   onDismiss(): void {
@@ -190,16 +228,6 @@ export class AppComponent implements OnInit {
 
   onClose(): void {
     this.editMode = false;
-  }
-
-  onDelete(): void {
-    this.selectedList = this.afs.doc('lists/testList');
-
-    if (this.selectedList) {
-      this.selectedListName = MyGlobals.DEFAULT_LIST_TITLE;
-      this.selectedListItems = [];
-      this.selectedList.delete();
-    }
   }
 
   formatItemString(item: any): string {

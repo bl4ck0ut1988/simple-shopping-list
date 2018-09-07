@@ -8,9 +8,9 @@
   <mat-menu #appMenu="matMenu">
       <button mat-menu-item (click)="openAddListDialog()">
           <mat-icon>playlist_add</mat-icon>
-          <span>Add List</span>
+          <span>Add New List</span>
         </button>
-      <button mat-menu-item disabled>
+      <button mat-menu-item (click)="openSelectListDialog()">
         <mat-icon>playlist_play</mat-icon>
         <span>Select List</span>
       </button>
@@ -23,16 +23,34 @@
 </div>
 
 <div>
- <mat-card class="item-list-card">
+  <div *ngIf="!selectedList" class="no-list-placeholder">
+  <div class="icon-container" (click)="openAddListDialog()">
+      <mat-icon>playlist_add</mat-icon>
+      Add New List
+  </div>
+  <div class="icon-container" (click)="openSelectListDialog()">
+      <mat-icon>playlist_play</mat-icon>
+      Select List
+  </div>
+
+  </div>
+ <mat-card *ngIf="selectedList" class="item-list-card">
    <mat-card-header class="item-list-card-header">
       <h1 class="underline">{{ selectedListName }}</h1>
       <mat-spinner *ngIf="listLoading" class="list-loader" [diameter]="24"></mat-spinner>
       <button
       mat-icon-button
+      (click)="onEditList()"
       class="edit-list-title-button"
-      [disabled]="editMode"
-      [matMenuTriggerFor]="listMenu">
+      [disabled]="editMode">
         <mat-icon>edit</mat-icon>
+      </button>
+      <button
+      mat-icon-button
+      (click)="onDeleteList()"
+      class="delete-list-title-button"
+      [disabled]="editMode">
+        <mat-icon>delete</mat-icon>
       </button>
       <mat-menu #listMenu="matMenu">
         <button mat-menu-item (click)="openSetTitleDialog()">
@@ -41,7 +59,7 @@
         </button>
         <button mat-menu-item (click)="onEdit()">
           <mat-icon>list</mat-icon>
-          <span>Edit Items</span>
+          <span>Edit List</span>
         </button>
       </mat-menu>
    </mat-card-header>
@@ -94,7 +112,7 @@
       (click)="onClose()"
       class="btn first save-button"
       mat-raised-button
-      color="primary">Leave Edit Mode</button>
+      color="primary">Exit Edit Mode</button>
   </mat-toolbar-row>
 </mat-toolbar>
 

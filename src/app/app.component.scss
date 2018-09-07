@@ -30,6 +30,34 @@
     
     }
 
+    .no-list-placeholder {
+        font-family: 'Caveat', cursive;
+        font-size: 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: $default-margin;
+        width: 100%;
+        color: grey;
+
+        .icon-container {
+            margin-top: $default-margin;
+            padding: $default-padding;
+            width: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: dashed 3px grey;
+            border-radius: $default-margin;
+
+            mat-icon {
+                font-size: 32px;
+            }
+        }
+    }
+
     .item-list-card {
         font-family: 'Caveat', cursive;
         position: relative;
@@ -93,6 +121,12 @@
         .list-content {
             overflow: auto;
             max-height: 70vh;
+
+            .empty-text {
+                margin: $default-margin*2;
+                margin-top: 0;
+                font-size: 22px;
+            }
         }
 
         .empty-text {
