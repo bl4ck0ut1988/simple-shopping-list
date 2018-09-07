@@ -79,6 +79,7 @@ export class AppComponent implements OnInit {
     this.itemCollection = this.afs.collection('lists');
 
     this.itemCollection.snapshotChanges().subscribe(changes => {
+      this.listsArray = [];
       changes.forEach(change => {
         const listId = change.payload.doc.id;
         this.listsObject[listId] = change.payload.doc.data().name;
@@ -93,8 +94,6 @@ export class AppComponent implements OnInit {
       console.log('listsObject:', this.listsObject);
       console.log('listsArray:', this.listsArray);
     });
-
-    // this.setSelectedListAndSubscribe('testList');
   }
 
   openSetTitleDialog(): void {
@@ -102,6 +101,7 @@ export class AppComponent implements OnInit {
       width: '250px',
       data: {
         title: 'Rename List',
+        placeholder: 'List Title',
         defaultValue: this.selectedListName,
         actionButtonLabel: 'Rename'
       }
@@ -120,6 +120,7 @@ export class AppComponent implements OnInit {
       width: '250px',
       data: {
         title: 'Add New List',
+        placeholder: 'List Title',
         defaultValue: '',
         actionButtonLabel: 'Add List'
       }
@@ -137,6 +138,7 @@ export class AppComponent implements OnInit {
       width: '250px',
       data: {
         title: 'Select List',
+        placeholder: 'List',
         lists: this.listsArray,
         actionButtonLabel: 'Select'
       }
@@ -207,7 +209,7 @@ export class AppComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '250px',
       data: {
-        title: 'Do you really want to delete this list ?',
+        title: 'Really delete this List ?',
         actionButtonLabel: 'Delete'
       }
     });

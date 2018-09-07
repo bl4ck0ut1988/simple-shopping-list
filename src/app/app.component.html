@@ -2,6 +2,7 @@
   <button
     mat-icon-button
     class="list-menu-button"
+    [disabled]="editMode"
     [matMenuTriggerFor]="appMenu">
     <mat-icon>menu</mat-icon>
   </button>
@@ -40,9 +41,9 @@
       <mat-spinner *ngIf="listLoading" class="list-loader" [diameter]="24"></mat-spinner>
       <button
       mat-icon-button
-      (click)="onEditList()"
       class="edit-list-title-button"
-      [disabled]="editMode">
+      [disabled]="editMode"
+      [matMenuTriggerFor]="editListMenu">
         <mat-icon>edit</mat-icon>
       </button>
       <button
@@ -52,12 +53,12 @@
       [disabled]="editMode">
         <mat-icon>delete</mat-icon>
       </button>
-      <mat-menu #listMenu="matMenu">
+      <mat-menu #editListMenu="matMenu">
         <button mat-menu-item (click)="openSetTitleDialog()">
           <mat-icon>edit</mat-icon>
           <span>Rename List</span>
         </button>
-        <button mat-menu-item (click)="onEdit()">
+        <button mat-menu-item (click)="onEditList()">
           <mat-icon>list</mat-icon>
           <span>Edit List</span>
         </button>

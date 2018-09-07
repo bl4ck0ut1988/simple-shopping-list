@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{data.title}}</h1>
 <div mat-dialog-content>
   <mat-form-field>
-      <mat-select placeholder="Lists" [(ngModel)]="selectedList" name="list">
+      <mat-select placeholder="{{data.placeholder}}" [(ngModel)]="selectedList" name="list">
         <mat-option *ngFor="let list of data.lists" [value]="list">
           {{list.name}}
         </mat-option>
