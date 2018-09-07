@@ -5,32 +5,21 @@ import { FormsModule } from '@angular/forms';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AppComponent, ChangeTitleDialogComponent } from './app.component';
+import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  MatDialogModule,
-  MatDividerModule,
-  MatInputModule,
-  MatButtonModule,
-  MatCardModule,
-  MatListModule,
-  MatIconModule,
-  MatMenuModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatToolbarModule
-} from '@angular/material';
+import { AngularMaterialModule } from './angular-material/angular-material.module';
+import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
 
 @NgModule({
-  entryComponents: [AppComponent, ChangeTitleDialogComponent],
+  entryComponents: [AppComponent, SetValueDialogComponent],
   declarations: [
     AppComponent,
-    ChangeTitleDialogComponent
+    SetValueDialogComponent
   ],
   imports: [
-    BrowserModule,
+  BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
@@ -38,17 +27,7 @@ import {
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     HttpClientModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatListModule,
-    MatMenuModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatToolbarModule
+    AngularMaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -6,7 +6,7 @@
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #appMenu="matMenu">
-      <button mat-menu-item disabled>
+      <button mat-menu-item (click)="openAddListDialog()">
           <mat-icon>playlist_add</mat-icon>
           <span>Add List</span>
         </button>
@@ -27,14 +27,6 @@
    <mat-card-header class="item-list-card-header">
       <h1 class="underline">{{ listName }}</h1>
       <mat-spinner *ngIf="listLoading" class="list-loader" [diameter]="24"></mat-spinner>
-      <!-- <button
-        class="edit-list-title-button"
-        mat-raised-button
-        (click)="onEdit()"
-        [disabled]="editMode"
-        color="primary">
-        Edit
-      </button> -->
       <button
       mat-icon-button
       class="edit-list-title-button"
@@ -43,7 +35,7 @@
         <mat-icon>edit</mat-icon>
       </button>
       <mat-menu #listMenu="matMenu">
-        <button mat-menu-item (click)="openDialog()">
+        <button mat-menu-item (click)="openSetTitleDialog()">
           <mat-icon>edit</mat-icon>
           <span>Rename List</span>
         </button>

@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
-import { AngularFirestore, CollectionReference, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
-import {MatDialog, MatIconRegistry, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
+import { MatDialog, MatIconRegistry } from '@angular/material';
 import { AngularFireDatabase } from 'angularfire2/database';
 import {DomSanitizer} from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { MyGlobals } from './myglobals';
 
 interface ShoppingList {
@@ -29,11 +30,16 @@ export class AppComponent implements OnInit {
   listName = MyGlobals.DEFAULT_LIST_TITLE;
   quantity = this.defaultQuantity;
 
+  selectedListSubscription: Subscription;
+
   editMode = false;
   listLoading = false;
 
+  listsObject: any = {};
+  listsArray: any[] = [];
+
   itemCollection: AngularFirestoreCollection<any>;
-  list: AngularFirestoreDocument<ShoppingList>;
+  selectedList: AngularFirestoreDocument<ShoppingList>;
   temporaryItems: any[] = [];
 
   svgIcons: SvgIcon[] = [
@@ -52,8 +58,8 @@ export class AppComponent implements OnInit {
     public dialog: MatDialog,
     private afs: AngularFirestore,
     private swUpdate: SwUpdate,
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer
   ) {
     this.svgIcons.forEach(icon => {
       iconRegistry.addSvgIcon(
@@ -73,7 +79,6 @@ export class AppComponent implements OnInit {
     // });
 
     this.itemCollection.valueChanges().subscribe(lists => {
-      // this.items = lists[0].list;
       if (lists.length >= 1) {
         this.temporaryItems = lists[0].list;
         this.listName = lists[0].name;
@@ -82,24 +87,55 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.list = this.afs.doc('lists/testList');
+    this.itemCollection.snapshotChanges().subscribe(changes => {
+      changes.forEach(change => {
+        const listId = change.payload.doc.id;
+        this.listsObject[listId] = change.payload.doc.data().name;
+        this.listsArray.push(
+          {
+            id: listId,
+            data: change.payload.doc.data().name
+          }
+        );
+      });
 
-    this.list.valueChanges().subscribe(list => {
-      if (list) {
-        this.temporaryItems = list.list;
-      }
+      console.log('listsObject:', this.listsObject);
+      console.log('listsArray:', this.listsArray);
     });
+
+    this.setSelectedListAndSubscribe('testList');
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(ChangeTitleDialogComponent, {
+  openSetTitleDialog(): void {
+    const dialogRef = this.dialog.open(SetValueDialogComponent, {
       width: '250px',
-      data: {title: this.listName}
+      data: {
+        title: 'Rename List',
+        defaultValue: this.listName,
+        actionButtonLabel: 'Rename'
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.listName = result;
+      }
+    });
+  }
+
+  openAddListDialog(): void {
+    const dialogRef = this.dialog.open(SetValueDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'Add New List',
+        defaultValue: '',
+        actionButtonLabel: 'Add List'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.createDocument(result, []);
       }
     });
   }
@@ -114,6 +150,32 @@ export class AppComponent implements OnInit {
     }).then(() => {
       this.resetAddItemFields();
       this.listLoading = false;
+    });
+  }
+
+  private createDocument(listName: string, items: any[]) {
+    // TODO: add loading indicator on top level
+    const id = this.afs.createId();
+    this.itemCollection.doc(id).set({
+      list: items,
+      name: listName
+    }).then(() => {
+      // reset top level loading indicator
+      this.setSelectedListAndSubscribe(id);
+    });
+  }
+
+  private setSelectedListAndSubscribe(listId: string): void {
+    if (this.selectedListSubscription) {
+      this.selectedListSubscription.unsubscribe();
+    }
+
+    this.selectedList = this.afs.doc(`lists/${listId}`);
+
+    this.selectedListSubscription = this.selectedList.valueChanges().subscribe(list => {
+      if (list) {
+        this.temporaryItems = list.list;
+      }
     });
   }
 
@@ -135,32 +197,16 @@ export class AppComponent implements OnInit {
   }
 
   onDelete(): void {
-    this.list = this.afs.doc('lists/testList');
+    this.selectedList = this.afs.doc('lists/testList');
 
-    if (this.list) {
+    if (this.selectedList) {
       this.listName = MyGlobals.DEFAULT_LIST_TITLE;
       this.temporaryItems = [];
-      this.list.delete();
+      this.selectedList.delete();
     }
   }
 
   formatItemString(item: any): string {
     return `${item.quantity}x ${item.name}`;
   }
-}
-
-@Component({
-  selector: 'change-title-dialog-component',
-  templateUrl: 'change-title-dialog-component.html',
-})
-export class ChangeTitleDialogComponent {
-
-  constructor(
-    public dialogRef: MatDialogRef<ChangeTitleDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
 }
