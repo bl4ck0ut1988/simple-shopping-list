@@ -54,4 +54,12 @@ body {
     mat-list-option:not(:last-child) {
         border-bottom: solid 1px #EEEEEE;
     }
+
+    mat-list {
+        padding-top: 0 !important; 
+    }
+
+    mat-list-item:not(:last-child) {
+        border-bottom: solid 1px #EEEEEE;
+    }
 }

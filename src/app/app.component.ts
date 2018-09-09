@@ -4,7 +4,7 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
 import { SelectValueDialogComponent } from './dialogs/select-value-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
-import { MatDialog, MatIconRegistry } from '@angular/material';
+import { MatDialog, MatIconRegistry, MatListOption } from '@angular/material';
 import { AngularFireDatabase } from 'angularfire2/database';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
@@ -26,7 +26,7 @@ interface SvgIcon {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  defaultQuantity = 1;
+  defaultQuantity = '1';
 
   // Add Item Dialog Props
   itemName = '';
@@ -38,6 +38,14 @@ export class AppComponent implements OnInit {
   selectedListName = MyGlobals.DEFAULT_LIST_TITLE;
   selectedListItems: any[] = [];
   selectedListSubscription: Subscription;
+
+  numbers: string[] = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5'
+  ];
 
   editMode = false;
   listLoading = false;
@@ -151,19 +159,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  onAddItem(): void {
-    this.listLoading = true;
-
-    const tempList = this.selectedListItems.concat();
-    tempList.push({ name: this.itemName, quantity: this.quantity });
-
-    this.setDocument(this.selectedListId, this.selectedListName, tempList)
-    .then(() => {
-      this.resetAddItemFields();
-      this.listLoading = false;
-    });
-  }
-
   private setDocument(id: string, listName: string, items: any[]): Promise<void> {
     return this.itemCollection.doc(id).set({
       list: items,
@@ -198,7 +193,55 @@ export class AppComponent implements OnInit {
 
   private resetAddItemFields(): void {
     this.itemName = '';
-    this.quantity = this.defaultQuantity;
+    this.quantity = this.defaultQuantity ? this.defaultQuantity : '1';
+  }
+
+  onSelectionChange(event): void {
+    const currentOptionsState: MatListOption[] = event.option.selectionList.options._results;
+    const tempList = this.selectedListItems.concat();
+
+    if (currentOptionsState) {
+      this.listLoading = true;
+
+      // TODO: Check why this isn't working...
+      // for (const [index, value] of currentOptionsState.entries()) {
+      //   tempList[index].checked = value.selected;
+      // }
+
+      for (let i = 0; i < currentOptionsState.length; i++) {
+        tempList[i].checked = currentOptionsState[i].selected;
+      }
+
+      this.setDocument(this.selectedListId, this.selectedListName, tempList)
+      .then(() => {
+        this.listLoading = false;
+      });
+    }
+  }
+
+  onAddItem(): void {
+    this.listLoading = true;
+
+    const tempList = this.selectedListItems.concat();
+    tempList.push({ name: this.itemName, quantity: this.quantity, checked: false });
+
+    this.setDocument(this.selectedListId, this.selectedListName, tempList)
+    .then(() => {
+      this.resetAddItemFields();
+      this.listLoading = false;
+    });
+  }
+
+  onDeleteItem(index: number): void {
+    this.listLoading = true;
+
+    const tempList = this.selectedListItems.concat();
+    tempList.splice(index, 1);
+
+    this.setDocument(this.selectedListId, this.selectedListName, tempList)
+    .then(() => {
+      this.listLoading = false;
+    });
   }
 
   onEditList(): void {

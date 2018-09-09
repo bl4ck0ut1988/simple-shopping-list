@@ -78,6 +78,24 @@
             }
         }
 
+        /deep/ mat-list-item {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+
+            .mat-list-item-content {
+                padding: 0 20px;
+            }
+        }
+
+        .mat-list-item {
+            position: realtive;
+            button {
+                position: absolute;
+                right: 0;
+                margin-right: $default-margin;
+            }
+        }
+
         .list-loader {
             margin-left: $default-margin;
         }
@@ -119,13 +137,39 @@
         }
 
         .list-content {
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: none;
             max-height: 70vh;
+            margin-bottom: 0;
 
             .empty-text {
                 margin: $default-margin*2;
                 margin-top: 0;
                 font-size: 22px;
+            }
+        }
+
+        .add-item-row {
+            background-color: lightgrey;
+            display: flex;
+            flex: 1;
+            flex-wrap: nowrap;
+            align-items: center;
+            padding: $default-padding 10px 0 $default-padding;
+            font-size: 14px;
+
+            .quantity-form-field {
+                width: 20%;
+                min-width: 70px;
+            }
+
+            .name-form-field {
+              flex: auto;
+              margin-right: 0;
+            }
+
+            .add-item-button {
+                align-self: center;
             }
         }
 
@@ -149,46 +193,14 @@
 
     .footer-bar {
         background-color: $primary-color-weak;
-        height: $footer-height*2;
+        height: $footer-height;
         position: absolute;
         left: 0;
         bottom: 0;
         z-index: 999;
 
-        .first-toolbar-row {
-            color: rgba(0,0,0,.87);
-            background-color: #fff;
+        .footer-toolbar-row {
             height: $footer-height;
-        }
-
-        .second-toolbar-row {
-            height: $footer-height;
-        }
-
-        .add-item-row {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            font-size: 14px;
-            
-            .list-title-form-field {
-                flex-grow: 5;
-            }
-
-            .name-form-field {
-              flex-grow: 5;
-            }
-      
-            .quantity-form-field {
-                width: 48px;
-                flex-grow: 1;
-            }
-
-            .add-item-button {
-                align-self: center;
-                min-width: 36px;
-                margin-bottom: $default-margin;
-            }
         }
     }
 }

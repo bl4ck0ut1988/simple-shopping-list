@@ -11,7 +11,10 @@
           <mat-icon>playlist_add</mat-icon>
           <span>Add New List</span>
         </button>
-      <button mat-menu-item (click)="openSelectListDialog()">
+      <button
+      mat-menu-item
+      *ngIf="listsArray.length > 0"
+      (click)="openSelectListDialog()">
         <mat-icon>playlist_play</mat-icon>
         <span>Select List</span>
       </button>
@@ -20,7 +23,7 @@
         <span>Change Theme</span>
       </button>
     </mat-menu>
-  <h1>Simple Checklists</h1>
+  <h1>Simple Checklist</h1>
 </div>
 
 <div>
@@ -29,7 +32,10 @@
       <mat-icon>playlist_add</mat-icon>
       Add New List
   </div>
-  <div class="icon-container" (click)="openSelectListDialog()">
+  <div
+  class="icon-container"
+  *ngIf="listsArray.length > 0"
+  (click)="openSelectListDialog()">
       <mat-icon>playlist_play</mat-icon>
       Select List
   </div>
@@ -67,48 +73,64 @@
    
    <mat-card-content class="list-content">
           <p class="empty-text" *ngIf="selectedListItems?.length < 1">List is empty ...</p>
-          <mat-selection-list  *ngIf="selectedListItems?.length > 0" #shoppingItems>
-            <mat-list-option *ngFor="let item of selectedListItems">
+          <mat-selection-list
+          (selectionChange)="onSelectionChange($event)"
+          class="selection-list"
+          *ngIf="!editMode && selectedListItems?.length > 0"
+          #selectionListItems>
+            <mat-list-option
+            *ngFor="let item of selectedListItems"
+            [selected]="item.checked">
                 {{formatItemString(item)}}
             </mat-list-option>
           </mat-selection-list>
+          <mat-list class="selection-list" *ngIf="editMode">
+            <mat-list-item class="mat-list-item" *ngFor="let item of selectedListItems; let i = index">
+                {{formatItemString(item)}}
+                <button mat-icon-button (click)="onDeleteItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+            </mat-list-item>
+          </mat-list>
    </mat-card-content>
+
+   <div class="add-item-row" *ngIf="editMode">
+    <mat-form-field class="quantity-form-field">
+      <mat-select
+      placeholder="Quantity"
+      [(ngModel)]="quantity"
+      name="quantity">
+        <mat-option *ngFor="let number of numbers" [value]="number">
+          {{number}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="name-form-field">
+      <input
+        matInput
+        type="text"
+        class="form-control name-input"
+        placeholder="Item"
+        id="item"
+        [(ngModel)]="itemName"
+        name="item">
+    </mat-form-field>
+    <button
+    class="add-item-button"
+      mat-icon-button
+      (click)="onAddItem()"
+      color="primary"
+      [disabled]="!itemName">
+      <mat-icon>
+        add_circle
+      </mat-icon>     
+    </button>
+  </div>
  </mat-card>
 </div>
 
 <mat-toolbar *ngIf="editMode" class='footer-bar' color="primary">
-  <mat-toolbar-row class="first-toolbar-row">
-    <div class="add-item-row">
-      <mat-form-field class="name-form-field">
-          <input
-            matInput
-            type="text"
-            class="form-control name-input"
-            placeholder="Item"
-            id="item"
-            [(ngModel)]="itemName"
-            name="item">
-      </mat-form-field>
-      <mat-form-field class="quantity-form-field">
-          <input
-            matInput
-            type="text"
-            class="form-control"
-            placeholder="Quantity"
-            [(ngModel)]="quantity"
-            name="quantity">
-      </mat-form-field>
-      <button
-      class="add-item-button"
-        mat-raised-button
-        (click)="onAddItem()"
-        color="primary"
-        [disabled]="!(itemName && quantity)">
-        +       
-      </button>
-    </div>
-  </mat-toolbar-row>
-  <mat-toolbar-row class="second-toolbar-row">
+  <mat-toolbar-row class="footer-toolbar-row">
       <button
       (click)="onClose()"
       class="btn first save-button"

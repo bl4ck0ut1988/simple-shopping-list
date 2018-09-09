@@ -9,5 +9,9 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button [mat-dialog-close]="data.defaultValue" cdkFocusInitial color="primary">{{data.actionButtonLabel}}</button>
+  <button mat-button
+    [mat-dialog-close]="data.defaultValue"
+    [disabled]="!data.defaultValue"
+    cdkFocusInitial
+    color="primary">{{data.actionButtonLabel}}</button>
 </div>
