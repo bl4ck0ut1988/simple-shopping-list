@@ -28,15 +28,15 @@
 
 <div class="app-container">
   <div *ngIf="!selectedList" class="no-select no-list-placeholder">
-  <div class="icon-container" (click)="openAddListDialog()">
-      <mat-icon>playlist_add</mat-icon>
-      Add New List
+    <div class="icon-container" (click)="openAddListDialog()">
+        <mat-icon>playlist_add</mat-icon>
+        Add New List
+    </div>
   </div>
 
-  </div>
  <mat-card *ngIf="selectedList" class="item-list-card">
     <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
-   <mat-card-header class="item-list-card-header">
+    <mat-card-header class="item-list-card-header">
       <h1>{{ selectedListName }}</h1>
       <button
       mat-icon-button
@@ -62,9 +62,9 @@
           <span>Edit List</span>
         </button>
       </mat-menu>
-   </mat-card-header>
+    </mat-card-header>
    
-   <mat-card-content class="list-content">
+    <mat-card-content class="list-content">
           <div class="empty-text" *ngIf="selectedListItems?.length < 1">
             List is empty. Add some Items 
             <button mat-icon-button [disabled]="editMode" (click)="onEditList()">
@@ -90,7 +90,7 @@
                 </button>
             </mat-list-item>
           </mat-list>
-   </mat-card-content>
+    </mat-card-content>
  </mat-card>
 </div>
 
@@ -129,7 +129,7 @@
             </button>
           </div>
     </mat-toolbar-row>
-  <mat-toolbar-row class="footer-toolbar-row">
+  <mat-toolbar-row class="bottom-row footer-toolbar-row">
       <button
       (click)="onClose()"
       class="btn first save-button"

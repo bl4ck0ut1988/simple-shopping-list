@@ -8,26 +8,23 @@ h1 {
 }
 
 html {
+    box-sizing: border-box;
     margin: 0;
     height: 100%;
     body {
         font-family: 'Roboto Mono', monospace;
-        box-sizing: border-box;
         display: flex;
         height: 100%;
-        margin: 0 $default-margin;
-        padding-bottom: 60px;
+        margin: 0;
         justify-content: center;
-        app-root {
-            width: 100%;
-            min-width: 300px;
-            max-width: 800px;
-        }
         background-color: #C5CAE9;
-    
+
+        app-root {
+            height: 100%;
+            width: 100%;
+        }
+
         mat-card {
-            margin-top: $default-margin;
-        
             .mat-card-header-text {
                 margin: 0;
             }
@@ -69,3 +66,7 @@ html {
         }
     }
 }
+
+*, *:before, *:after {
+    box-sizing: border-box;
+  }
