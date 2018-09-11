@@ -7,59 +7,65 @@ h1 {
     padding: 0;
 }
 
-body {
-    font-family: 'Roboto Mono', monospace;
-    display: flex;
-    margin: 0 $default-margin;
-    padding-bottom: 60px;
-    justify-content: center;
-    app-root {
-        width: 100%;
-        min-width: 300px;
-        max-width: 800px;
-    }
-    background-color: #C5CAE9;
-
-    mat-card {
-        margin-top: $default-margin;
+html {
+    margin: 0;
+    height: 100%;
+    body {
+        font-family: 'Roboto Mono', monospace;
+        box-sizing: border-box;
+        display: flex;
+        height: 100%;
+        margin: 0 $default-margin;
+        padding-bottom: 60px;
+        justify-content: center;
+        app-root {
+            width: 100%;
+            min-width: 300px;
+            max-width: 800px;
+        }
+        background-color: #C5CAE9;
     
-        .mat-card-header-text {
-            margin: 0;
+        mat-card {
+            margin-top: $default-margin;
+        
+            .mat-card-header-text {
+                margin: 0;
+            }
+        
+            .mat-card-actions {
+                margin-bottom: 0 !important;
+                padding: $default-padding;
+            }
+        }
+        
+        mat-form-field:not(:last-child) {
+            margin-right: $default-margin;
+        }
+        
+        mat-list-option {
+            .mat-pseudo-checkbox-checked {
+                background-color: #673ab7;
+            } 
+        
+            .mat-pseudo-checkbox-checked + .mat-list-text {
+                color: lightgrey;
+            }
+        }
+        
+        mat-selection-list {
+            padding-top: 0 !important; 
+        }
+        
+        mat-list-option:not(:last-child) {
+            border-bottom: solid 1px #EEEEEE;
         }
     
-        .mat-card-actions {
-            margin-bottom: 0 !important;
-            padding: $default-padding;
+        mat-list {
+            padding-top: 0 !important; 
         }
-    }
     
-    mat-form-field:not(:last-child) {
-        margin-right: $default-margin;
-    }
-    
-    mat-list-option {
-        .mat-pseudo-checkbox-checked {
-            background-color: #673ab7;
-        } 
-    
-        .mat-pseudo-checkbox-checked + .mat-list-text {
-            color: lightgrey;
+        mat-list-item:not(:last-child) {
+            border-bottom: solid 1px #EEEEEE;
         }
-    }
-    
-    mat-selection-list {
-        padding-top: 0 !important; 
-    }
-    
-    mat-list-option:not(:last-child) {
-        border-bottom: solid 1px #EEEEEE;
-    }
-
-    mat-list {
-        padding-top: 0 !important; 
-    }
-
-    mat-list-item:not(:last-child) {
-        border-bottom: solid 1px #EEEEEE;
     }
 }

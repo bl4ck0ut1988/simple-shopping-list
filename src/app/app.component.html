@@ -26,25 +26,18 @@
   <h1>Simple Checklist</h1>
 </div>
 
-<div>
-  <div *ngIf="!selectedList" class="no-list-placeholder">
+<div class="app-container">
+  <div *ngIf="!selectedList" class="no-select no-list-placeholder">
   <div class="icon-container" (click)="openAddListDialog()">
       <mat-icon>playlist_add</mat-icon>
       Add New List
   </div>
-  <div
-  class="icon-container"
-  *ngIf="listsArray.length > 0"
-  (click)="openSelectListDialog()">
-      <mat-icon>playlist_play</mat-icon>
-      Select List
-  </div>
 
   </div>
  <mat-card *ngIf="selectedList" class="item-list-card">
+    <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
    <mat-card-header class="item-list-card-header">
-      <h1 class="underline">{{ selectedListName }}</h1>
-      <mat-spinner *ngIf="listLoading" class="list-loader" [diameter]="24"></mat-spinner>
+      <h1>{{ selectedListName }}</h1>
       <button
       mat-icon-button
       class="edit-list-title-button"
@@ -72,7 +65,12 @@
    </mat-card-header>
    
    <mat-card-content class="list-content">
-          <p class="empty-text" *ngIf="selectedListItems?.length < 1">List is empty ...</p>
+          <div class="empty-text" *ngIf="selectedListItems?.length < 1">
+            List is empty. Add some Items 
+            <button mat-icon-button [disabled]="editMode" (click)="onEditList()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
           <mat-selection-list
           (selectionChange)="onSelectionChange($event)"
           class="selection-list"
@@ -93,43 +91,44 @@
             </mat-list-item>
           </mat-list>
    </mat-card-content>
-
-   <div class="add-item-row" *ngIf="editMode">
-    <mat-form-field class="quantity-form-field">
-      <mat-select
-      placeholder="Quantity"
-      [(ngModel)]="quantity"
-      name="quantity">
-        <mat-option *ngFor="let number of numbers" [value]="number">
-          {{number}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="name-form-field">
-      <input
-        matInput
-        type="text"
-        class="form-control name-input"
-        placeholder="Item"
-        id="item"
-        [(ngModel)]="itemName"
-        name="item">
-    </mat-form-field>
-    <button
-    class="add-item-button"
-      mat-icon-button
-      (click)="onAddItem()"
-      color="primary"
-      [disabled]="!itemName">
-      <mat-icon>
-        add_circle
-      </mat-icon>     
-    </button>
-  </div>
  </mat-card>
 </div>
 
 <mat-toolbar *ngIf="editMode" class='footer-bar' color="primary">
+    <mat-toolbar-row class="footer-toolbar-row">
+        <div class="add-item-row" *ngIf="editMode">
+            <mat-form-field class="quantity-form-field">
+              <mat-select
+              placeholder="Quantity"
+              [(ngModel)]="quantity"
+              name="quantity">
+                <mat-option *ngFor="let number of numbers" [value]="number">
+                  {{number}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="name-form-field">
+              <input
+                matInput
+                type="text"
+                class="form-control name-input"
+                placeholder="Item"
+                id="item"
+                [(ngModel)]="itemName"
+                name="item">
+            </mat-form-field>
+            <button
+            class="add-item-button"
+              mat-icon-button
+              (click)="onAddItem()"
+              color="primary"
+              [disabled]="!itemName">
+              <mat-icon>
+                add_circle
+              </mat-icon>     
+            </button>
+          </div>
+    </mat-toolbar-row>
   <mat-toolbar-row class="footer-toolbar-row">
       <button
       (click)="onClose()"
