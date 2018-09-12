@@ -240,6 +240,32 @@ export class AppComponent implements OnInit {
     });
   }
 
+  moveItemUp(index: number): void {
+    this.listLoading = true;
+
+    const tempList = this.selectedListItems.concat();
+    const stored = tempList.splice(index, 1);
+    tempList.splice(index - 1, 0, stored[0]);
+
+    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
+    .then(() => {
+      this.listLoading = false;
+    });
+  }
+
+  moveItemDown(index: number): void {
+    this.listLoading = true;
+
+    const tempList = this.selectedListItems.concat();
+    const stored = tempList.splice(index, 1);
+    tempList.splice(index + 1, 0, stored[0]);
+
+    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
+    .then(() => {
+      this.listLoading = false;
+    });
+  }
+
   onDeleteItem(index: number): void {
     this.listLoading = true;
 
@@ -284,6 +310,10 @@ export class AppComponent implements OnInit {
   }
 
   formatItemString(item: any): string {
-    return `${item.quantity}x ${item.name}`;
+    if (this.showQuantityInputs) {
+      return `${item.quantity}x ${item.name}`;
+    } else {
+      return item.name;
+    }
   }
 }

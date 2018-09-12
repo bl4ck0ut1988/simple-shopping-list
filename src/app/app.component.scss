@@ -89,10 +89,19 @@
     
             .mat-list-item {
                 position: realtive;
-                button {
+                .delete-button {
                     position: absolute;
                     right: 0;
                     margin-right: $default-margin;
+                }
+                .move-down-button {
+                    position: absolute;
+                    right: $icon-width + $default-margin;
+                    margin-right: $default-margin;
+                }
+                .move-up-button {
+                    position: absolute;
+                    right: $icon-width*2 + $default-margin*2;
                 }
             }
     
@@ -116,6 +125,7 @@
                 h1 {
                     font-size: 18px;
                     font-family: 'Roboto Condensed', sans-serif;
+                    cursor: pointer;
                 }
     
                 .edit-list-title-button {

@@ -30,29 +30,19 @@
   <mat-card *ngIf="selectedList" class="item-list-card">
     <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
     <mat-card-header class="item-list-card-header">
-      <h1>{{ selectedListName }}</h1>
-      <button mat-icon-button class="edit-list-title-button" [disabled]="editMode" [matMenuTriggerFor]="editListMenu">
+      <h1 (click)="openSetTitleDialog()">{{ selectedListName }}</h1>
+      <button mat-icon-button (click)="onEditList()" class="edit-list-title-button" [disabled]="editMode">
         <mat-icon>edit</mat-icon>
       </button>
       <button mat-icon-button (click)="onDeleteList()" class="delete-list-title-button" [disabled]="editMode">
         <mat-icon>delete</mat-icon>
       </button>
-      <mat-menu #editListMenu="matMenu">
-        <button mat-menu-item (click)="openSetTitleDialog()">
-          <mat-icon>edit</mat-icon>
-          <span>Rename List</span>
-        </button>
-        <button mat-menu-item (click)="onEditList()">
-          <mat-icon>list</mat-icon>
-          <span>Edit List</span>
-        </button>
-      </mat-menu>
     </mat-card-header>
 
     <mat-card-content class="list-content">
-      <div class="empty-text" *ngIf="selectedListItems?.length < 1">
+      <div (click)="onEditList()" class="empty-text" *ngIf="selectedListItems?.length < 1">
         List is empty. Add some Items
-        <button mat-icon-button [disabled]="editMode" (click)="onEditList()">
+        <button mat-icon-button [disabled]="editMode">
           <mat-icon>add</mat-icon>
         </button>
       </div>
@@ -68,7 +58,13 @@
       <mat-list class="selection-list" *ngIf="editMode">
         <mat-list-item class="mat-list-item" *ngFor="let item of selectedListItems; let i = index">
           {{formatItemString(item)}}
-          <button mat-icon-button (click)="onDeleteItem(i)">
+          <button [disabled]="i <= 0" class="move-up-button" mat-icon-button (click)="moveItemUp(i)">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          </button>
+          <button [disabled]="i >= selectedListItems.length-1" class="move-down-button" mat-icon-button (click)="moveItemDown(i)">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+          <button class="delete-button" mat-icon-button (click)="onDeleteItem(i)">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-list-item>
