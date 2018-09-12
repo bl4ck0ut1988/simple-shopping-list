@@ -1,8 +1,9 @@
 @import "../variables.scss";
 
 :host{
-    box-sizing: border-box;
+
     padding-top: $footer-height;
+    padding-bottom: $footer-height*2;
     height: 100%;
 
     .no-select {
@@ -19,7 +20,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-sizing: border-box;
+        //box-sizing: border-box;
         position: absolute;
         box-shadow: 0 2px 4px rgba(0,0,0,.5);
         height: $footer-height;
@@ -44,8 +45,11 @@
     }
 
     .app-container {
-        box-sizing: border-box;
-        height: 100%;
+        max-height: 100%;
+        display: flex;
+        justify-content: center;
+        padding: $default-padding;
+
         .no-list-placeholder {
             font-family: 'Roboto Condensed', sans-serif;
             font-size: 20px;
@@ -55,12 +59,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding-top: $default-margin;
             width: 100%;
             color: white;
     
             .icon-container {
-                box-sizing: border-box;
                 margin: $default-margin;
                 padding: $default-padding;
                 align-self: center;
@@ -81,6 +83,8 @@
         .item-list-card {
             font-family: 'Roboto Condensed', sans-serif;
             position: relative;
+            width: 100%;
+            max-width: 1000px;
             padding: 48px 0 0 0;
     
             .mat-list-item {
@@ -97,7 +101,6 @@
             }
     
             .item-list-card-header {
-                box-sizing: border-box;
                 border-top-left-radius: 2px;
                 border-top-right-radius: 2px;
                 position: absolute;
@@ -105,22 +108,19 @@
                 top: 0;
                 left: 0;
                 width: 100%;
-                padding: 0 $default-padding 0 20px;
+                padding: 0 $default-padding 0 16px;
                 background-color: $primary-color-weaker;
                 display: flex;
                 align-items: center;
                 
                 h1 {
-                    font-size: 20px;
+                    font-size: 18px;
                     font-family: 'Roboto Condensed', sans-serif;
                 }
     
                 .edit-list-title-button {
                     margin-left: auto;
                 }
-                // padding-bottom: $default-padding;
-                // border-bottom: solid 1px $separator-color;
-                // background-color: $primary-color;
             }
 
             @media (max-width: 599px) {
@@ -131,10 +131,10 @@
     
             .list-content {
                 position: relative;
-                height: 48px;
+                min-height: 48px;
                 overflow-y: auto;
                 overflow-x: none;
-                max-height: 70vh;
+                max-height: 100%;
                 margin-bottom: 0;
     
                 .empty-text {
@@ -179,12 +179,13 @@
 
         .footer-toolbar-row {
             height: $footer-height;
+            padding: 0;
 
             .add-item-row {
+                width: 100%;
                 display: flex;
-                flex: 1;
-                flex-wrap: nowrap;
-                padding: $default-padding 0 0 0;
+                padding: 12px;
+                padding-bottom: 0;
                 font-size: 14px;
     
                 .quantity-form-field {
@@ -206,6 +207,24 @@
                     color: $primary-color-weaker;
                 }
             }
+        }
+    
+        .save-button {
+            color: white;
+        }
+    
+        .dismiss-button {
+            color: white;
+        }
+    }
+
+    .bottom-row {
+        width: 100%;
+        display: flex;
+
+        button {
+            margin: 0 $default-margin;
+            flex: auto;
         }
     }
 
