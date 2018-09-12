@@ -6,11 +6,13 @@
     placeholder="{{data.placeholder}}"
     [(ngModel)]="data.defaultValue">
   </mat-form-field>
+  <mat-checkbox *ngIf="data.isAddListDialog" color="primary" [(ngModel)]="data.quantityChecked">Quantity Inputs</mat-checkbox>
 </div>
-<div mat-dialog-actions>
+<div class="dialog-actions" mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
   <button mat-button
-    [mat-dialog-close]="data.defaultValue"
+    mat-raised-button
+    [mat-dialog-close]="data"
     [disabled]="!data.defaultValue"
     cdkFocusInitial
     color="primary">{{data.actionButtonLabel}}</button>

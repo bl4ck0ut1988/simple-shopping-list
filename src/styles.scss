@@ -65,6 +65,17 @@ html {
             border-bottom: solid 1px #EEEEEE;
         }
     }
+
+    mat-dialog-container { 
+        mat-checkbox {
+            color: rgba(0,0,0,.42);
+        }
+               
+        .mat-dialog-actions {
+            margin-top: $dialog-margin;
+            border-top: 1px solid $separator-color;
+        }
+    }
 }
 
 *, *:before, *:after {

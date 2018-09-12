@@ -13,6 +13,7 @@ import { MyGlobals } from './myglobals';
 interface ShoppingList {
   list: any[];
   name: string;
+  showQuantityInputs: boolean;
 }
 
 interface SvgIcon {
@@ -38,14 +39,11 @@ export class AppComponent implements OnInit {
   selectedListName = MyGlobals.DEFAULT_LIST_TITLE;
   selectedListItems: any[] = [];
   selectedListSubscription: Subscription;
+  maxQuantity = 10;
 
-  numbers: string[] = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5'
-  ];
+  showQuantityInputs = false;
+
+  numbers: string[] = [];
 
   editMode = false;
   listLoading = false;
@@ -82,6 +80,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    for (let i = 1; i < this.maxQuantity+1; i++) {
+      this.numbers.push(`${i}`);
+    }
+
     this.swUpdate.available.subscribe(() => {});
 
     this.itemCollection = this.afs.collection('lists');
@@ -108,17 +110,19 @@ export class AppComponent implements OnInit {
     const dialogRef = this.dialog.open(SetValueDialogComponent, {
       width: '250px',
       data: {
+        isAddListDialog: false,        
         title: 'Rename List',
         placeholder: 'List Title',
         defaultValue: this.selectedListName,
-        actionButtonLabel: 'Rename'
+        actionButtonLabel: 'Rename',
+        quantityChecked: false
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.selectedListName = result;
-        this.setDocument(this.selectedListId, this.selectedListName, this.selectedListItems);
+        this.selectedListName = result.defaultValue;
+        this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, this.selectedListItems);
       }
     });
   }
@@ -127,16 +131,18 @@ export class AppComponent implements OnInit {
     const dialogRef = this.dialog.open(SetValueDialogComponent, {
       width: '250px',
       data: {
+        isAddListDialog: true,
         title: 'Add New List',
         placeholder: 'List Title',
         defaultValue: '',
-        actionButtonLabel: 'Add List'
+        actionButtonLabel: 'Add List',
+        quantityChecked: false 
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.createDocument(result, []);
+        this.createDocument(result.defaultValue, result.quantityChecked, []);
       }
     });
   }
@@ -159,17 +165,18 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private setDocument(id: string, listName: string, items: any[]): Promise<void> {
+  private setDocument(id: string, listName: string, showQuantityInputs: boolean, items: any[]): Promise<void> {
     return this.itemCollection.doc(id).set({
       list: items,
-      name: listName
+      name: listName,
+      showQuantityInputs: showQuantityInputs
     });
   }
 
-  private createDocument(listName: string, items: any[]) {
+  private createDocument(listName: string, showQuantityInputs: boolean, items: any[]) {
     // TODO: add loading indicator on top level
     const id = this.afs.createId();
-    this.setDocument(id, listName, items).then(() => {
+    this.setDocument(id, listName, showQuantityInputs, items).then(() => {
       // reset top level loading indicator
       this.setSelectedListAndSubscribe(id);
     });
@@ -187,6 +194,7 @@ export class AppComponent implements OnInit {
         this.selectedListName = list.name;
         this.selectedListId = listId;
         this.selectedListItems = list.list;
+        this.showQuantityInputs = list.showQuantityInputs;
       }
     });
   }
@@ -212,7 +220,7 @@ export class AppComponent implements OnInit {
         tempList[i].checked = currentOptionsState[i].selected;
       }
 
-      this.setDocument(this.selectedListId, this.selectedListName, tempList)
+      this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
       .then(() => {
         this.listLoading = false;
       });
@@ -225,7 +233,7 @@ export class AppComponent implements OnInit {
     const tempList = this.selectedListItems.concat();
     tempList.push({ name: this.itemName, quantity: this.quantity, checked: false });
 
-    this.setDocument(this.selectedListId, this.selectedListName, tempList)
+    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
     .then(() => {
       this.resetAddItemFields();
       this.listLoading = false;
@@ -238,7 +246,7 @@ export class AppComponent implements OnInit {
     const tempList = this.selectedListItems.concat();
     tempList.splice(index, 1);
 
-    this.setDocument(this.selectedListId, this.selectedListName, tempList)
+    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
     .then(() => {
       this.listLoading = false;
     });

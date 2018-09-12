@@ -80,7 +80,7 @@
 <mat-toolbar *ngIf="editMode" class='footer-bar' color="primary">
   <mat-toolbar-row class="footer-toolbar-row">
     <div class="add-item-row" *ngIf="editMode">
-      <mat-form-field class="quantity-form-field">
+      <mat-form-field *ngIf="showQuantityInputs" class="quantity-form-field">
         <mat-select placeholder="Quantity" [(ngModel)]="quantity" name="quantity">
           <mat-option *ngFor="let number of numbers" [value]="number">
             {{number}}
