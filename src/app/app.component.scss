@@ -208,6 +208,16 @@
                 }
             }
         }
+
+        .bottom-row {
+            width: 100%;
+            display: flex;
+    
+            button {
+                margin: 0 $default-margin;
+                flex: auto;
+            }
+        }
     
         .save-button {
             color: white;
@@ -215,16 +225,6 @@
     
         .dismiss-button {
             color: white;
-        }
-    }
-
-    .bottom-row {
-        width: 100%;
-        display: flex;
-
-        button {
-            margin: 0 $default-margin;
-            flex: auto;
         }
     }
 
