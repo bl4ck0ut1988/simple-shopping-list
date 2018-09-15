@@ -11,6 +11,7 @@
 <div class="dialog-actions" mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
   <button mat-button
+    mat-raised-button
     [mat-dialog-close]="selectedList"
     [disabled]="!selectedList"
     cdkFocusInitial

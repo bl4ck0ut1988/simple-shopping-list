@@ -1,3 +1,14 @@
-<p>
-  login works!
-</p>
+<div class="login-container">
+  <div class="login-form" [formGroup]="loginForm">
+    <mat-form-field>
+      <input matInput [(ngModel)]="usernameValue" placeholder="Username" formControlName="username" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input [(ngModel)]="passwordValue" matInput placeholder="Password" formControlName="password" required>
+    </mat-form-field>
+    <button mat-raised-button (click)="signIn()">Sign In</button>
+    <button mat-raised-button [disabled]="!loginForm.valid" (click)="signUp()">Sign Up</button>
+    <button mat-raised-button (click)="logout()">Logout</button>
+  </div>
+  <p>Logged in User: {{userEmail}}</p>
+</div>

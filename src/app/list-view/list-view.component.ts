@@ -1,11 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { SetValueDialogComponent } from '../dialogs/set-value-dialog.component';
 import { SelectValueDialogComponent } from '../dialogs/select-value-dialog.component';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 import { MatDialog, MatIconRegistry, MatListOption } from '@angular/material';
-import { AngularFireDatabase } from 'angularfire2/database';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { MyGlobals } from '../myglobals';
