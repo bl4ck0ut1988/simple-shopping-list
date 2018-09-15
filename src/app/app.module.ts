@@ -13,6 +13,9 @@ import { AngularMaterialModule } from './angular-material/angular-material.modul
 import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
 import { SelectValueDialogComponent } from './dialogs/select-value-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
+import { ListViewComponent } from './list-view/list-view.component';
+import { LoginComponent } from './login/login.component';
+import { AppRoutingModule } from './/app-routing.module';
 
 @NgModule({
   entryComponents: [
@@ -25,10 +28,12 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
     AppComponent,
     SetValueDialogComponent,
     SelectValueDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ListViewComponent,
+    LoginComponent
   ],
   imports: [
-  BrowserModule,
+    BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
@@ -36,7 +41,8 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     HttpClientModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

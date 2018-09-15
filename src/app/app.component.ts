@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    for (let i = 1; i < this.maxQuantity+1; i++) {
+    for (let i = 1; i < this.maxQuantity + 1; i++) {
       this.numbers.push(`${i}`);
     }
 
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
     const dialogRef = this.dialog.open(SetValueDialogComponent, {
       width: '250px',
       data: {
-        isAddListDialog: false,        
+        isAddListDialog: false,
         title: 'Rename List',
         placeholder: 'List Title',
         defaultValue: this.selectedListName,
