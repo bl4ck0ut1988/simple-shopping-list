@@ -16,6 +16,10 @@
         <mat-icon>color_lens</mat-icon>
         <span>Change Theme</span>
       </button>
+      <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
     </mat-menu>
     <h1>Simple Checklist</h1>
   </div>
@@ -31,7 +35,7 @@
     <mat-card *ngIf="selectedList" class="item-list-card">
       <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
       <mat-card-header class="item-list-card-header">
-        <h1 (click)="openSetTitleDialog()">{{ selectedListName }}</h1>
+        <h1 (click)="openSetTitleDialog()">{{ selectedList.name }}</h1>
         <button mat-icon-button (click)="onEditList()" class="edit-list-title-button" [disabled]="editMode">
           <mat-icon>edit</mat-icon>
         </button>
@@ -40,26 +44,26 @@
         </button>
       </mat-card-header>
 
-      <mat-card-content class="list-content">
-        <div (click)="onEditList()" class="empty-text" *ngIf="selectedListItems?.length < 1">
+      <mat-card-content *ngIf="selectedList.list" class="list-content">
+        <div (click)="onEditList()" class="empty-text" *ngIf="selectedList.list?.length < 1">
           List is empty. Add some Items
           <button mat-icon-button [disabled]="editMode">
             <mat-icon>add</mat-icon>
           </button>
         </div>
-        <mat-selection-list (selectionChange)="onSelectionChange($event)" class="selection-list" *ngIf="!editMode && selectedListItems?.length > 0"
+        <mat-selection-list (selectionChange)="onSelectionChange($event)" class="selection-list" *ngIf="!editMode && selectedList.list?.length > 0"
           #selectionListItems>
-          <mat-list-option *ngFor="let item of selectedListItems" [selected]="item.checked">
+          <mat-list-option *ngFor="let item of selectedList.list" [selected]="item.checked">
             {{formatItemString(item)}}
           </mat-list-option>
         </mat-selection-list>
         <mat-list class="selection-list" *ngIf="editMode">
-          <mat-list-item class="mat-list-item" *ngFor="let item of selectedListItems; let i = index">
+          <mat-list-item class="mat-list-item" *ngFor="let item of selectedList.list; let i = index">
             {{formatItemString(item)}}
             <button [disabled]="i <= 0" class="move-up-button" mat-icon-button (click)="moveItemUp(i)">
               <mat-icon>keyboard_arrow_up</mat-icon>
             </button>
-            <button [disabled]="i >= selectedListItems.length-1" class="move-down-button" mat-icon-button (click)="moveItemDown(i)">
+            <button [disabled]="i >= selectedList.list.length-1" class="move-down-button" mat-icon-button (click)="moveItemDown(i)">
               <mat-icon>keyboard_arrow_down</mat-icon>
             </button>
             <button class="delete-button" mat-icon-button (click)="onDeleteItem(i)">

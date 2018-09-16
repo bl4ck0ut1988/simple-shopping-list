@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 
@@ -9,17 +10,24 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   user: Observable<firebase.User>;
+  userCollection: AngularFirestoreCollection<any>;
 
-  constructor(private firebaseAuth: AngularFireAuth) {
+  constructor(private firebaseAuth: AngularFireAuth, private afs: AngularFirestore) {
     this.user = firebaseAuth.authState;
+    this.userCollection = this.afs.collection('users');
   }
 
-  signup(email: string, password: string) {
+  signup(username: string, email: string, password: string) {
     this.firebaseAuth
     .auth
     .createUserWithEmailAndPassword(email, password)
-    .then(value => {
-      console.log('Success!', value);
+    .then(response => {
+      const user: firebase.User = response.user;
+      this.userCollection.doc(user.uid).set({
+        username: username,
+        email: user.email
+      });
+      console.log('Success!', response);
     })
     .catch(error => {
       console.log('Something went wrong:', error.message);
@@ -42,7 +50,7 @@ export class AuthService {
     this.firebaseAuth.auth.signOut();
   }
 
-  getUser() {
+  getUser(): Observable<firebase.User> {
     return this.user;
   }
 }

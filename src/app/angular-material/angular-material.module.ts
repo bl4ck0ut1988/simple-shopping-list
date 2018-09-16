@@ -12,12 +12,13 @@ import {
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatSelectModule,
+  MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
 
 @NgModule({
   imports: [
-    MatCheckboxModule,    
+    MatCheckboxModule,
     MatDialogModule,
     MatDividerModule,
     MatInputModule,
@@ -29,10 +30,11 @@ import {
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatTabsModule,
     MatToolbarModule
   ],
   exports: [
-    MatCheckboxModule,    
+    MatCheckboxModule,
     MatDialogModule,
     MatDividerModule,
     MatInputModule,
@@ -44,6 +46,7 @@ import {
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatTabsModule,
     MatToolbarModule
   ]
 })

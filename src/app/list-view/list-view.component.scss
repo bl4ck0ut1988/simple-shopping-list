@@ -164,6 +164,10 @@
                         color: $primary-color-weak;
                     }
                 }
+
+                .selection-list {
+                    font-size: 10px;
+                }
             }
         }
     
@@ -252,8 +256,7 @@
 
     /deep/ mat-list-option {
         font-family: 'Roboto Condensed', sans-serif;
-
-        font-size: 18px;
+        font-size: 16px;
 
         .mat-list-item-content {
             padding: 0 20px;
@@ -262,7 +265,7 @@
 
     /deep/ mat-list-item {
         font-family: 'Roboto Condensed', sans-serif;
-        font-size: 24px;
+        font-size: 16px;
 
         .mat-list-item-content {
             padding: 0 20px;

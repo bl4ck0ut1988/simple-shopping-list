@@ -5,14 +5,18 @@ import { SetValueDialogComponent } from '../dialogs/set-value-dialog.component';
 import { SelectValueDialogComponent } from '../dialogs/select-value-dialog.component';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 import { MatDialog, MatIconRegistry, MatListOption } from '@angular/material';
-import {DomSanitizer} from '@angular/platform-browser';
-import { Observable, Subscription } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Observable, Subscription, forkJoin, combineLatest } from 'rxjs';
 import { MyGlobals } from '../myglobals';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+import { User } from 'firebase';
 
-interface ShoppingList {
+interface CheckList {
   list: any[];
   name: string;
   showQuantityInputs: boolean;
+  roles: any;
 }
 
 interface SvgIcon {
@@ -33,14 +37,13 @@ export class ListViewComponent implements OnInit {
   quantity = this.defaultQuantity;
 
   // Selected List Props
-  selectedList: AngularFirestoreDocument<ShoppingList>;
-  selectedListId: string;
-  selectedListName = MyGlobals.DEFAULT_LIST_TITLE;
-  selectedListItems: any[] = [];
-  selectedListSubscription: Subscription;
-  maxQuantity = 10;
+  public selectedListDocument: AngularFirestoreDocument<CheckList>;
+  public selectedList: CheckList;
 
-  showQuantityInputs = false;
+  selectedListId: string;
+  selectedListSubscription: Subscription;
+
+  maxQuantity = 10;
 
   numbers: string[] = [];
 
@@ -49,6 +52,8 @@ export class ListViewComponent implements OnInit {
 
   listsObject: any = {};
   listsArray: any[] = [];
+
+  private signedInUser: User;
 
   itemCollection: AngularFirestoreCollection<any>;
 
@@ -69,7 +74,9 @@ export class ListViewComponent implements OnInit {
     private afs: AngularFirestore,
     private swUpdate: SwUpdate,
     private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private auth: AuthService,
+    private router: Router
   ) {
     this.svgIcons.forEach(icon => {
       iconRegistry.addSvgIcon(
@@ -83,24 +90,36 @@ export class ListViewComponent implements OnInit {
       this.numbers.push(`${i}`);
     }
 
-    this.swUpdate.available.subscribe(() => {});
+    this.swUpdate.available.subscribe(() => { });
 
     this.itemCollection = this.afs.collection('lists');
 
-    this.itemCollection.snapshotChanges().subscribe(changes => {
-      this.listsArray = [];
-      changes.forEach(change => {
-        const listId = change.payload.doc.id;
-        this.listsObject[listId] = change.payload.doc.data().name;
-        this.listsArray.push(
-          {
-            id: listId,
-            name: change.payload.doc.data().name
-          }
-        );
-      });
+    combineLatest(
+      this.itemCollection.snapshotChanges(),
+      this.auth.getUser()
+    ).subscribe(([snapshotChanges, user]) => {
+      this.signedInUser = user;
+      console.log('USER', user);
 
-      console.log('listsObject:', this.listsObject);
+      if (user.uid) {
+        this.listsArray = [];
+        console.log('CHanges', snapshotChanges);
+        snapshotChanges.forEach(change => {
+          const roles = change.payload.doc.data().roles;
+          if (Object.keys(roles).some(key => {
+            return key === user.uid && roles[key] === 'owner';
+          })) {
+            this.listsArray.push(
+              {
+                id: change.payload.doc.id,
+                name: change.payload.doc.data().name,
+                roles: change.payload.doc.data().roles
+              }
+            );
+          }
+        });
+      }
+
       console.log('listsArray:', this.listsArray);
     });
   }
@@ -112,7 +131,7 @@ export class ListViewComponent implements OnInit {
         isAddListDialog: false,
         title: 'Rename List',
         placeholder: 'List Title',
-        defaultValue: this.selectedListName,
+        defaultValue: this.selectedList.name,
         actionButtonLabel: 'Rename',
         quantityChecked: false
       }
@@ -120,8 +139,13 @@ export class ListViewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.selectedListName = result.defaultValue;
-        this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, this.selectedListItems);
+        this.selectedList.name = result.defaultValue;
+        this.setDocument(
+          this.selectedListId,
+          this.selectedList.name,
+          this.selectedList.showQuantityInputs,
+          this.selectedList.list,
+          this.selectedList.roles);
       }
     });
   }
@@ -135,13 +159,15 @@ export class ListViewComponent implements OnInit {
         placeholder: 'List Title',
         defaultValue: '',
         actionButtonLabel: 'Add List',
-        quantityChecked: false 
+        quantityChecked: false
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.createDocument(result.defaultValue, result.quantityChecked, []);
+        const roles = {};
+        roles[this.signedInUser.uid] = 'owner';
+        this.createDocument(result.defaultValue, result.quantityChecked, [], roles);
       }
     });
   }
@@ -164,21 +190,26 @@ export class ListViewComponent implements OnInit {
     });
   }
 
-  private setDocument(id: string, listName: string, showQuantityInputs: boolean, items: any[]): Promise<void> {
+  private setDocument(id: string, listName: string, showQuantityInputs: boolean, items: any[], roles: any): Promise<void> {
     return this.itemCollection.doc(id).set({
       list: items,
       name: listName,
-      showQuantityInputs: showQuantityInputs
+      showQuantityInputs: showQuantityInputs,
+      roles: roles
     });
   }
 
-  private createDocument(listName: string, showQuantityInputs: boolean, items: any[]) {
+  private createDocument(listName: string, showQuantityInputs: boolean, items: any[], roles: any) {
     // TODO: add loading indicator on top level
     const id = this.afs.createId();
-    this.setDocument(id, listName, showQuantityInputs, items).then(() => {
-      // reset top level loading indicator
-      this.setSelectedListAndSubscribe(id);
-    });
+    this.setDocument(id, listName, showQuantityInputs, items, roles)
+      .then(() => {
+        // reset top level loading indicator
+        this.setSelectedListAndSubscribe(id);
+      })
+      .catch(error => {
+        console.log('Could not create Document', error);
+      });
   }
 
   private setSelectedListAndSubscribe(listId: string): void {
@@ -186,14 +217,12 @@ export class ListViewComponent implements OnInit {
       this.selectedListSubscription.unsubscribe();
     }
 
-    this.selectedList = this.itemCollection.doc(listId);
+    this.selectedListDocument = this.itemCollection.doc(listId);
 
-    this.selectedListSubscription = this.selectedList.valueChanges().subscribe(list => {
+    this.selectedListSubscription = this.selectedListDocument.valueChanges().subscribe(list => {
       if (list) {
-        this.selectedListName = list.name;
         this.selectedListId = listId;
-        this.selectedListItems = list.list;
-        this.showQuantityInputs = list.showQuantityInputs;
+        this.selectedList = list;
       }
     });
   }
@@ -205,7 +234,7 @@ export class ListViewComponent implements OnInit {
 
   onSelectionChange(event): void {
     const currentOptionsState: MatListOption[] = event.option.selectionList.options._results;
-    const tempList = this.selectedListItems.concat();
+    const tempList = this.selectedList.list.concat();
 
     if (currentOptionsState) {
       this.listLoading = true;
@@ -219,62 +248,87 @@ export class ListViewComponent implements OnInit {
         tempList[i].checked = currentOptionsState[i].selected;
       }
 
-      this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
-      .then(() => {
-        this.listLoading = false;
-      });
+      this.setDocument(
+        this.selectedListId,
+        this.selectedList.name,
+        this.selectedList.showQuantityInputs,
+        tempList,
+        this.selectedList.roles)
+        .then(() => {
+          this.listLoading = false;
+        });
     }
   }
 
   onAddItem(): void {
     this.listLoading = true;
 
-    const tempList = this.selectedListItems.concat();
+    const tempList = this.selectedList.list.concat();
     tempList.push({ name: this.itemName, quantity: this.quantity, checked: false });
 
-    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
-    .then(() => {
-      this.resetAddItemFields();
-      this.listLoading = false;
-    });
+    this.setDocument(
+      this.selectedListId,
+      this.selectedList.name,
+      this.selectedList.showQuantityInputs,
+      tempList,
+      this.selectedList.roles)
+      .then(() => {
+        this.resetAddItemFields();
+        this.listLoading = false;
+      });
   }
 
   moveItemUp(index: number): void {
     this.listLoading = true;
 
-    const tempList = this.selectedListItems.concat();
+    const tempList = this.selectedList.list.concat();
     const stored = tempList.splice(index, 1);
     tempList.splice(index - 1, 0, stored[0]);
 
-    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
-    .then(() => {
-      this.listLoading = false;
-    });
+    this.setDocument(
+      this.selectedListId,
+      this.selectedList.name,
+      this.selectedList.showQuantityInputs,
+      tempList,
+      this.selectedList.roles)
+      .then(() => {
+        this.listLoading = false;
+      });
   }
 
   moveItemDown(index: number): void {
     this.listLoading = true;
 
-    const tempList = this.selectedListItems.concat();
+    const tempList = this.selectedList.list.concat();
     const stored = tempList.splice(index, 1);
     tempList.splice(index + 1, 0, stored[0]);
 
-    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
-    .then(() => {
-      this.listLoading = false;
-    });
+    this.setDocument(
+      this.selectedListId,
+      this.selectedList.name,
+      this.selectedList.showQuantityInputs,
+      tempList,
+      this.selectedList.roles)
+      .then(() => {
+        this.listLoading = false;
+      });
   }
 
   onDeleteItem(index: number): void {
     this.listLoading = true;
 
-    const tempList = this.selectedListItems.concat();
+    const tempList = this.selectedList.list.concat();
     tempList.splice(index, 1);
 
-    this.setDocument(this.selectedListId, this.selectedListName, this.showQuantityInputs, tempList)
-    .then(() => {
-      this.listLoading = false;
-    });
+    this.setDocument(
+      this.selectedListId,
+      this.selectedList.name,
+      this.selectedList.showQuantityInputs,
+      tempList,
+      this.selectedList.roles)
+      .then(() => {
+        this.listLoading = false;
+      });
   }
 
   onEditList(): void {
@@ -286,15 +340,15 @@ export class ListViewComponent implements OnInit {
       width: '250px',
       data: {
         title: 'Really delete this List ?',
-        actionButtonLabel: 'Delete'
+        actionButtonLabel: 'Delete',
+        buttonColor: 'warn'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && this.selectedList) {
-        this.selectedListName = '';
-        this.selectedListItems = [];
-        this.selectedList.delete();
+      if (result && this.selectedListDocument) {
+        this.selectedListDocument.delete();
+        this.selectedListDocument = null;
         this.selectedList = null;
       }
     });
@@ -309,10 +363,15 @@ export class ListViewComponent implements OnInit {
   }
 
   formatItemString(item: any): string {
-    if (this.showQuantityInputs) {
+    if (this.selectedList.showQuantityInputs) {
       return `${item.quantity}x ${item.name}`;
     } else {
       return item.name;
     }
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }
