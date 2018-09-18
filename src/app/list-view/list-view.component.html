@@ -36,6 +36,9 @@
       <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
       <mat-card-header class="item-list-card-header">
         <h1 (click)="openSetTitleDialog()">{{ selectedList.name }}</h1>
+        <button mat-icon-button class="owners-title-button">
+          <mat-icon>person</mat-icon>
+        </button>
         <button mat-icon-button (click)="onEditList()" class="edit-list-title-button" [disabled]="editMode">
           <mat-icon>edit</mat-icon>
         </button>
