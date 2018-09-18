@@ -10,7 +10,7 @@
           <input matInput placeholder="Email" formControlName="emailLogin" required>
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="Password" formControlName="passwordLogin" required>
+          <input type="password" matInput placeholder="Password" formControlName="passwordLogin" required>
         </mat-form-field>
         <button mat-raised-button [disabled]="!loginForm.valid" (click)="signIn()" color="primary">Login</button>
       </div>
@@ -28,7 +28,7 @@
             <input matInput placeholder="Email" formControlName="emailSignUp" required>
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Password" formControlName="passwordSignUp" required>
+            <input type="password" matInput placeholder="Password" formControlName="passwordSignUp" required>
           </mat-form-field>
           <button mat-raised-button [disabled]="!signUpForm.valid" (click)="signUp()" color="primary">Sign Up</button>
         </div>

@@ -11,6 +11,7 @@ import { MyGlobals } from '../myglobals';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { User } from 'firebase';
+import { AddOwnerDialogComponent } from './../dialogs/add-owner-dialog.component';
 
 interface CheckList {
   list: any[];
@@ -52,10 +53,12 @@ export class ListViewComponent implements OnInit {
 
   listsObject: any = {};
   listsArray: any[] = [];
+  usersArray: any[] = [];
 
   private signedInUser: User;
 
   itemCollection: AngularFirestoreCollection<any>;
+  userCollection: AngularFirestoreCollection<any>;
 
   svgIcons: SvgIcon[] = [
     {
@@ -93,6 +96,21 @@ export class ListViewComponent implements OnInit {
     this.swUpdate.available.subscribe(() => { });
 
     this.itemCollection = this.afs.collection('lists');
+    this.userCollection = this.afs.collection('users');
+
+    this.userCollection.snapshotChanges().subscribe(changes => {
+      changes.forEach(change => {
+        this.usersArray.push(
+          {
+            id: change.payload.doc.id,
+            username: change.payload.doc.data().username,
+            email: change.payload.doc.data().email
+          }
+        );
+      });
+
+      console.log('usersarray', this.usersArray);
+    });
 
     combineLatest(
       this.itemCollection.snapshotChanges(),
@@ -186,6 +204,36 @@ export class ListViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.setSelectedListAndSubscribe(result.id);
+      }
+    });
+  }
+
+  openAddOwnerDialog(): void {
+    const dialogRef = this.dialog.open(AddOwnerDialogComponent, {
+      width: '250px',
+      data: {
+        placeholder: 'Add Owner',
+        selectedList: this.selectedList,
+        users: this.usersArray,
+        actionButtonLabel: 'Add'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(user => {
+      if (user) {
+        this.listLoading = true;
+        console.log(user);
+        this.selectedList.roles[user.id] = 'owner';
+
+        this.setDocument(
+          this.selectedListId,
+          this.selectedList.name,
+          this.selectedList.showQuantityInputs,
+          this.selectedList.list,
+          this.selectedList.roles)
+          .then(() => {
+            this.listLoading = false;
+          });
       }
     });
   }

@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Add Owner</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-select placeholder="{{data.placeholder}}" [(ngModel)]="selectedUser" name="user">
+      <mat-option *ngFor="let user of availableUsers" [value]="user">
+        {{user.username}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div class="dialog-actions" mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button
+    mat-raised-button
+    [mat-dialog-close]="selectedUser"
+    [disabled]="!selectedUser"
+    cdkFocusInitial
+    color="primary">{{data.actionButtonLabel}}</button>
+</div>

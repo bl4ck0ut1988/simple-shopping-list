@@ -7,6 +7,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './angular-material/angular-material.module';
+import { AddOwnerDialogComponent } from './dialogs/add-owner-dialog.component';
 import { SetValueDialogComponent } from './dialogs/set-value-dialog.component';
 import { SelectValueDialogComponent } from './dialogs/select-value-dialog.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
@@ -23,12 +24,14 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 @NgModule({
   entryComponents: [
     AppComponent,
+    AddOwnerDialogComponent,
     SetValueDialogComponent,
     SelectValueDialogComponent,
     ConfirmDialogComponent
   ],
   declarations: [
     AppComponent,
+    AddOwnerDialogComponent,
     SetValueDialogComponent,
     SelectValueDialogComponent,
     ConfirmDialogComponent,
