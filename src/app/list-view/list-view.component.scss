@@ -79,6 +79,31 @@
                 }
             }
         }
+
+        .available-lists-container {
+            width: 100%;
+            padding: 0;
+
+            .list-entry {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                padding: $default-padding;
+
+                .list-chips {
+                    margin-left: auto;
+                }
+            }
+
+            .list-entry:hover {
+                cursor: pointer;
+                background-color: $primary-color-weaker;
+            }
+
+            .list-entry:not(:last-child) {
+                border-bottom: solid 1px $separator-color;
+            }
+        }
     
         .item-list-card {
             font-family: 'Roboto Condensed', sans-serif;

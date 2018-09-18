@@ -25,19 +25,28 @@
   </div>
 
   <div class="app-container">
-    <div *ngIf="!selectedList" class="no-select no-list-placeholder">
+    <div *ngIf="!selectedList && listsArray.length < 1" class="no-select no-list-placeholder">
       <div class="icon-container" (click)="openAddListDialog()">
         <mat-icon>playlist_add</mat-icon>
         Add New List
       </div>
     </div>
 
+    <mat-card class="available-lists-container" *ngIf="!selectedList && listsArray.length > 0">
+      <div class="list-entry" (click)="setSelectedListAndSubscribe(list.id)" *ngFor="let list of listsArray">
+        {{list.name}}
+        <mat-chip-list class="list-chips">
+          <mat-chip *ngFor="let userKey of objectRef.keys(list.roles)">{{getUsernameById(userKey)}}</mat-chip>
+        </mat-chip-list>
+      </div>
+    </mat-card>
+
     <mat-card *ngIf="selectedList" class="item-list-card">
       <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
       <mat-card-header class="item-list-card-header">
         <h1 (click)="openSetTitleDialog()">{{ selectedList.name }}</h1>
         <button mat-icon-button (click)="openAddOwnerDialog()" class="owners-title-button" [disabled]="editMode">
-          <mat-icon>person</mat-icon>
+          <mat-icon>person_add</mat-icon>
         </button>
         <button mat-icon-button (click)="onEditList()" class="edit-list-title-button" [disabled]="editMode">
           <mat-icon>edit</mat-icon>
@@ -54,6 +63,7 @@
             <mat-icon>add</mat-icon>
           </button>
         </div>
+        
         <mat-selection-list (selectionChange)="onSelectionChange($event)" class="selection-list" *ngIf="!editMode && selectedList.list?.length > 0"
           #selectionListItems>
           <mat-list-option *ngFor="let item of selectedList.list" [selected]="item.checked">

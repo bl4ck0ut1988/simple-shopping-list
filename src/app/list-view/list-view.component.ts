@@ -43,6 +43,7 @@ export class ListViewComponent implements OnInit {
 
   selectedListId: string;
   selectedListSubscription: Subscription;
+  selectedListUserKeys: string[];
 
   maxQuantity = 10;
 
@@ -50,6 +51,8 @@ export class ListViewComponent implements OnInit {
 
   editMode = false;
   listLoading = false;
+
+  objectRef = Object;
 
   listsObject: any = {};
   listsArray: any[] = [];
@@ -212,7 +215,7 @@ export class ListViewComponent implements OnInit {
     const dialogRef = this.dialog.open(AddOwnerDialogComponent, {
       width: '250px',
       data: {
-        placeholder: 'Add Owner',
+        placeholder: 'Username',
         selectedList: this.selectedList,
         users: this.usersArray,
         actionButtonLabel: 'Add'
@@ -421,5 +424,11 @@ export class ListViewComponent implements OnInit {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  getUsernameById(id: string): string {
+    return this.usersArray.filter(user => {
+      return user.id === id;
+    })[0].username;
   }
 }
