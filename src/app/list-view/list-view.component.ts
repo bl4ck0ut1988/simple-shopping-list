@@ -135,7 +135,7 @@ export class ListViewComponent implements OnInit {
         snapshotChanges.forEach(change => {
           const roles = change.payload.doc.data().roles;
           if (Object.keys(roles).some(key => {
-            return key === user.uid && roles[key] === Roles.Owner;
+            return key === user.uid && (roles[key] === Roles.Owner || roles[key] === Roles.Friend );
           })) {
             this.listsArray.push(
               {
