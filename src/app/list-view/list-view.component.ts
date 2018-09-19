@@ -49,6 +49,7 @@ export class ListViewComponent implements OnInit {
   public selectedList: CheckList;
 
   selectedListId: string;
+  selectedListOwnerId: string;
   selectedListSubscription: Subscription;
   selectedListUserKeys: string[];
 
@@ -135,7 +136,13 @@ export class ListViewComponent implements OnInit {
         snapshotChanges.forEach(change => {
           const roles = change.payload.doc.data().roles;
           if (Object.keys(roles).some(key => {
-            return key === user.uid && (roles[key] === Roles.Owner || roles[key] === Roles.Friend );
+            const isOwnerKey = roles[key] === Roles.Owner;
+
+            if (isOwnerKey) {
+              this.selectedListOwnerId = key;
+            }
+
+            return key === user.uid && (isOwnerKey || roles[key] === Roles.Friend );
           })) {
             this.listsArray.push(
               {
@@ -150,6 +157,10 @@ export class ListViewComponent implements OnInit {
 
       console.log('listsArray:', this.listsArray);
     });
+  }
+
+  isListOfSignedInUser(): boolean {
+    return this.selectedListOwnerId === this.signedInUser.uid;
   }
 
   openSetTitleDialog(): void {

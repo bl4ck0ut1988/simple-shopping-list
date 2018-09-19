@@ -45,13 +45,13 @@
       <mat-progress-bar *ngIf="listLoading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
       <mat-card-header class="item-list-card-header">
         <h1 (click)="openSetTitleDialog()">{{ selectedList.name }}</h1>
-        <button mat-icon-button (click)="openAddFriendDialog()" class="owners-title-button" [disabled]="editMode">
+        <button mat-icon-button (click)="openAddFriendDialog()" class="owners-title-button" [disabled]="editMode || !isListOfSignedInUser()">
           <mat-icon>person_add</mat-icon>
         </button>
         <button mat-icon-button (click)="onEditList()" class="edit-list-title-button" [disabled]="editMode">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button (click)="onDeleteList()" class="delete-list-title-button" [disabled]="editMode">
+        <button mat-icon-button (click)="onDeleteList()" class="delete-list-title-button" [disabled]="editMode || !isListOfSignedInUser()">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-card-header>
