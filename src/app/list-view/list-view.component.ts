@@ -11,7 +11,7 @@ import { MyGlobals } from '../myglobals';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { User } from 'firebase';
-import { AddOwnerDialogComponent } from './../dialogs/add-owner-dialog.component';
+import { AddFriendDialogComponent } from './../dialogs/add-friend-dialog.component';
 
 interface CheckList {
   list: any[];
@@ -25,6 +25,11 @@ interface SvgIcon {
   path: string;
 }
 
+enum Roles {
+  Owner = 'owner',
+  Friend = 'friend'
+}
+
 @Component({
   selector: 'app-list-view',
   templateUrl: './list-view.component.html',
@@ -32,6 +37,8 @@ interface SvgIcon {
 })
 export class ListViewComponent implements OnInit {
   defaultQuantity = '1';
+
+  ownerRole = Roles.Owner;
 
   // Add Item Dialog Props
   itemName = '';
@@ -128,7 +135,7 @@ export class ListViewComponent implements OnInit {
         snapshotChanges.forEach(change => {
           const roles = change.payload.doc.data().roles;
           if (Object.keys(roles).some(key => {
-            return key === user.uid && roles[key] === 'owner';
+            return key === user.uid && roles[key] === Roles.Owner;
           })) {
             this.listsArray.push(
               {
@@ -187,32 +194,18 @@ export class ListViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         const roles = {};
-        roles[this.signedInUser.uid] = 'owner';
+        roles[this.signedInUser.uid] = Roles.Owner;
         this.createDocument(result.defaultValue, result.quantityChecked, [], roles);
       }
     });
   }
 
   openSelectListDialog(): void {
-    const dialogRef = this.dialog.open(SelectValueDialogComponent, {
-      width: '250px',
-      data: {
-        title: 'Select List',
-        placeholder: 'List',
-        lists: this.listsArray,
-        actionButtonLabel: 'Select'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.setSelectedListAndSubscribe(result.id);
-      }
-    });
+    this.resetSelectedList();
   }
 
-  openAddOwnerDialog(): void {
-    const dialogRef = this.dialog.open(AddOwnerDialogComponent, {
+  openAddFriendDialog(): void {
+    const dialogRef = this.dialog.open(AddFriendDialogComponent, {
       width: '250px',
       data: {
         placeholder: 'Username',
@@ -226,7 +219,7 @@ export class ListViewComponent implements OnInit {
       if (user) {
         this.listLoading = true;
         console.log(user);
-        this.selectedList.roles[user.id] = 'owner';
+        this.selectedList.roles[user.id] = Roles.Friend;
 
         this.setDocument(
           this.selectedListId,
@@ -276,6 +269,13 @@ export class ListViewComponent implements OnInit {
         this.selectedList = list;
       }
     });
+  }
+
+  private resetSelectedList(): void {
+    this.selectedListSubscription.unsubscribe();
+    this.selectedListSubscription = null;
+    this.selectedListId = null;
+    this.selectedList = null;
   }
 
   private resetAddItemFields(): void {
@@ -399,8 +399,7 @@ export class ListViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result && this.selectedListDocument) {
         this.selectedListDocument.delete();
-        this.selectedListDocument = null;
-        this.selectedList = null;
+        this.resetSelectedList();
       }
     });
   }
@@ -424,6 +423,22 @@ export class ListViewComponent implements OnInit {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  sortRoles(roles: any): string[] {
+    const sortedRoles = [];
+    let owner = '';
+
+    Object.keys(roles).map(role => {
+      if (roles[role] === Roles.Owner) {
+        owner = role;
+      } else {
+        sortedRoles.push(role);
+      }
+    });
+
+    sortedRoles.push(owner);
+    return sortedRoles;
   }
 
   getUsernameById(id: string): string {

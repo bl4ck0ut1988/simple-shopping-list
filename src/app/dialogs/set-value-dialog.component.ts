@@ -14,4 +14,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
     onNoClick(): void {
         this.dialogRef.close();
     }
+
+    quantityCheckedChanged(event: any) {
+        this.data.quantityChecked = event.checked;
+    }
 }

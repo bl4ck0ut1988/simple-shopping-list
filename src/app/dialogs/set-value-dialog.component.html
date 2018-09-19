@@ -6,7 +6,7 @@
     placeholder="{{data.placeholder}}"
     [(ngModel)]="data.defaultValue">
   </mat-form-field>
-  <mat-checkbox *ngIf="data.isAddListDialog" color="primary" [(ngModel)]="data.quantityChecked">Quantity Inputs</mat-checkbox>
+  <mat-slide-toggle *ngIf="data.isAddListDialog" color="primary" (change)="quantityCheckedChanged($event)">Quantity Inputs</mat-slide-toggle>
 </div>
 <div class="dialog-actions" mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>

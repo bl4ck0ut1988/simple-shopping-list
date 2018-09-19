@@ -13,6 +13,7 @@ import {
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatSelectModule,
+  MatSlideToggleModule,
   MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
@@ -32,6 +33,7 @@ import {
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTabsModule,
     MatToolbarModule
   ],
@@ -49,6 +51,7 @@ import {
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTabsModule,
     MatToolbarModule
   ]

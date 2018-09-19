@@ -2,16 +2,16 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-    selector: 'add-owner-dialog.component',
-    templateUrl: 'add-owner-dialog.component.html',
+    selector: 'add-friend-dialog.component',
+    templateUrl: 'add-friend-dialog.component.html',
   })
-export class AddOwnerDialogComponent {
+export class AddFriendDialogComponent {
 
     selectedUser: any;
     availableUsers: any[];
 
     constructor(
-        public dialogRef: MatDialogRef<AddOwnerDialogComponent>,
+        public dialogRef: MatDialogRef<AddFriendDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
             this.availableUsers = data.users.filter(user => {
                 return !data.selectedList.roles[user.id];

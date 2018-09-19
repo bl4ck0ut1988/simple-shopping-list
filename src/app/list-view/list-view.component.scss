@@ -92,6 +92,11 @@
 
                 .list-chips {
                     margin-left: auto;
+
+                    .owner-chip {
+                        background-color: $primary-color;
+                        color: #fff;
+                    }
                 }
             }
 
