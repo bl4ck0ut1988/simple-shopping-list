@@ -1,4 +1,4 @@
-<div class="list-view-container">
+<div [class.edit-mode]="editMode"  class="list-view-container">
   <div class='header-bar'>
     <button mat-icon-button class="list-menu-button" [disabled]="editMode" [matMenuTriggerFor]="appMenu">
       <mat-icon>menu</mat-icon>
@@ -36,7 +36,7 @@
       <div class="list-entry" (click)="setSelectedListAndSubscribe(list.id)" *ngFor="let list of listsArray">
         {{list.name}}
         <mat-chip-list class="list-chips">
-          <mat-chip [class.owner-chip]="list.roles[userKey] === ownerRole" *ngFor="let userKey of sortRoles(list.roles)">{{getUsernameById(userKey)}}</mat-chip>
+          <mat-chip [class.owner-chip]="list.roles[userKey] === ownerRole" *ngFor="let userKey of sortRoles(list.roles)">{{getUsernameById(userKey, list)}}</mat-chip>
         </mat-chip-list>
       </div>
     </mat-card>

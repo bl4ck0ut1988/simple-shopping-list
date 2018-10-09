@@ -3,8 +3,11 @@
 .list-view-container{
 
     padding-top: $footer-height;
-    padding-bottom: $footer-height*2;
     height: 100%;
+
+    &.edit-mode {
+        padding-bottom: $footer-height*2;
+    } 
 
     .no-select {
         -webkit-touch-callout: none; /* iOS Safari */
@@ -41,7 +44,6 @@
             font-family: 'Great Vibes', cursive;
             font-size: 32px;
         }
-    
     }
 
     .app-container {
@@ -88,6 +90,7 @@
                 width: 100%;
                 display: flex;
                 align-items: center;
+                white-space: nowrap;
                 padding: $default-padding;
 
                 .list-chips {
