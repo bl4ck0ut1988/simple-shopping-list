@@ -452,9 +452,14 @@ export class ListViewComponent implements OnInit {
     return sortedRoles;
   }
 
-  getUsernameById(id: string): string {
-    return this.usersArray.filter(user => {
+  getUsernameById(id: string, list: CheckList): string {
+    const userName = this.usersArray.filter(user => {
       return user.id === id;
     })[0].username;
+
+    if (list && Object.keys(list.roles).length > 2) {
+      return userName.substring(0, 2);
+    }
+    return userName;
   }
 }
