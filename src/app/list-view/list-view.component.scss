@@ -177,6 +177,11 @@
                 .owners-title-button {
                     margin-left: auto;
                 }
+
+                .select-all-checkbox {
+                    margin-left: $default-margin;
+                    margin-right: 8px;
+                }
             }
 
             @media (max-width: 599px) {

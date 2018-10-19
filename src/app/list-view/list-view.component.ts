@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { SetValueDialogComponent } from '../dialogs/set-value-dialog.component';
 import { SelectValueDialogComponent } from '../dialogs/select-value-dialog.component';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
-import { MatDialog, MatIconRegistry, MatListOption } from '@angular/material';
+import { MatDialog, MatIconRegistry, MatListOption, MatSelectionList } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subscription, forkJoin, combineLatest } from 'rxjs';
 import { MyGlobals } from '../myglobals';
@@ -53,6 +53,8 @@ export class ListViewComponent implements OnInit {
   selectedListSubscription: Subscription;
   selectedListUserKeys: string[];
 
+  selectAllChecked: boolean;
+
   maxQuantity = 10;
 
   numbers: string[] = [];
@@ -82,6 +84,8 @@ export class ListViewComponent implements OnInit {
     },
   ];
 
+  @ViewChild(MatSelectionList) selectionListItems: MatSelectionList;
+
   constructor(
     // private cr: CollectionReference,
     public dialog: MatDialog,
@@ -97,6 +101,32 @@ export class ListViewComponent implements OnInit {
         icon.name,
         sanitizer.bypassSecurityTrustResourceUrl(`/assets/nova_icons/solid/${icon.path}`));
     });
+  }
+
+  toggleMassSelection(): void {
+    const fakeEvent = {
+      option: {
+        selectionList: {
+          options: {
+            _results: []
+          }
+        }
+      }
+    };
+
+    if (this.selectAllChecked) {
+      fakeEvent.option.selectionList.options._results = this.selectedList.list.concat().map(entry => {
+        return {selected: false};
+      });
+      this.selectionListItems.deselectAll();
+    } else {
+      fakeEvent.option.selectionList.options._results = this.selectedList.list.concat().map(entry => {
+        return {selected: true};
+      });
+      this.selectionListItems.selectAll();
+    }
+
+    this.onSelectionChange(fakeEvent);
   }
 
   ngOnInit(): void {
@@ -280,6 +310,8 @@ export class ListViewComponent implements OnInit {
   }
 
   private setSelectedListAndSubscribe(listId: string): void {
+    this.selectAllChecked = false;
+
     if (this.selectedListSubscription) {
       this.selectedListSubscription.unsubscribe();
     }
