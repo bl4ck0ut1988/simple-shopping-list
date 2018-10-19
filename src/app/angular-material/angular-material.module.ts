@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+  MatBadgeModule,
   MatCheckboxModule,
   MatChipsModule,
   MatDialogModule,
@@ -20,6 +21,7 @@ import {
 
 @NgModule({
   imports: [
+    MatBadgeModule,
     MatCheckboxModule,
     MatChipsModule,
     MatDialogModule,
@@ -38,6 +40,7 @@ import {
     MatToolbarModule
   ],
   exports: [
+    MatBadgeModule,
     MatCheckboxModule,
     MatChipsModule,
     MatDialogModule,

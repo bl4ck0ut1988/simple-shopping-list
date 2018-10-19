@@ -52,6 +52,16 @@
         justify-content: center;
         padding: $default-padding;
 
+        .check-icon {
+            margin-left: $default-margin/2;
+            color: #4CAF50;
+        }
+
+        .check-icon-outline {
+            margin-left: $default-margin/2;
+            color: #81C784;
+        }
+
         .no-list-placeholder {
             font-family: 'Roboto Condensed', sans-serif;
             font-size: 20px;
@@ -84,11 +94,13 @@
 
         .available-lists-container {
             width: 100%;
+            max-width: 1000px;
             padding: 0;
 
             .list-entry {
                 width: 100%;
                 display: flex;
+                height: $footer-height;
                 align-items: center;
                 white-space: nowrap;
                 padding: $default-padding;

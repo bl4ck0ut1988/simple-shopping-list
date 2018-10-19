@@ -128,11 +128,11 @@ export class ListViewComponent implements OnInit {
       this.auth.getUser()
     ).subscribe(([snapshotChanges, user]) => {
       this.signedInUser = user;
-      console.log('USER', user);
+      // console.log('USER', user);
 
       if (user.uid) {
         this.listsArray = [];
-        console.log('CHanges', snapshotChanges);
+        // console.log('CHanges', snapshotChanges);
         snapshotChanges.forEach(change => {
           const roles = change.payload.doc.data().roles;
           if (Object.keys(roles).some(key => {
@@ -148,14 +148,15 @@ export class ListViewComponent implements OnInit {
               {
                 id: change.payload.doc.id,
                 name: change.payload.doc.data().name,
-                roles: change.payload.doc.data().roles
+                roles: change.payload.doc.data().roles,
+                list: change.payload.doc.data().list
               }
             );
           }
         });
       }
 
-      console.log('listsArray:', this.listsArray);
+      // console.log('listsArray:', this.listsArray);
     });
   }
 
@@ -243,6 +244,17 @@ export class ListViewComponent implements OnInit {
           });
       }
     });
+  }
+
+  getUncheckedItems(selectedList: CheckList): number {
+    let selectedItems = 0;
+    console.log('selectedItems', selectedItems);
+    selectedList.list.forEach(entry => {
+      if (entry.checked) {
+        selectedItems++;
+      }
+    });
+    return selectedList.list.length - selectedItems;
   }
 
   private setDocument(id: string, listName: string, showQuantityInputs: boolean, items: any[], roles: any): Promise<void> {
