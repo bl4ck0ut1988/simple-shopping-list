@@ -17,6 +17,19 @@ export class AuthService {
     this.userCollection = this.afs.collection('users');
   }
 
+  doGoogleLogin() {
+    return new Promise<any>((resolve, reject) => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
+      this.firebaseAuth.auth
+      .signInWithPopup(provider)
+      .then(res => {
+        resolve(res);
+      });
+    });
+  }
+
   signup(username: string, email: string, password: string) {
     this.firebaseAuth
     .auth

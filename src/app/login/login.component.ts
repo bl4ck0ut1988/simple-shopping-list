@@ -45,6 +45,10 @@ export class LoginComponent implements OnInit {
     );
   }
 
+  signInWithGoogle(): void {
+    this.auth.doGoogleLogin();
+  }
+
   signUp(): void {
     this.auth.signup(this.signUpForm.get('usernameSignUp').value,
       this.signUpForm.get('emailSignUp').value,

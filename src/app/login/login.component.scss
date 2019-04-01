@@ -19,4 +19,18 @@
         flex-direction: column;
         margin-top: $default-margin;
     }
+
+    /deep/ .google-login-button {
+        margin-top: $default-margin;
+        padding-left: 0;
+        
+        img {
+            margin-right: $default-margin;
+        }
+    }
+
+    .or-separator {
+        margin-top: $default-margin;
+        color: grey;
+    }
 }
