@@ -75,7 +75,14 @@
         </mat-selection-list>
         <mat-list class="selection-list" *ngIf="editMode">
           <mat-list-item class="mat-list-item" *ngFor="let item of selectedList.list; let i = index">
-            {{formatItemString(item)}}
+              <mat-form-field *ngIf="selectedList.showQuantityInputs" class="quantity-form-field">
+                <mat-select (selectionChange)="editQuantityChanged($event)" [(ngModel)]="item.quantity" name="editQuantity">
+                  <mat-option *ngFor="let number of numbers" [value]="number">
+                    {{number}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              {{item.name}}
             <button [disabled]="i <= 0" class="move-up-button" mat-icon-button (click)="moveItemUp(i)">
               <mat-icon>keyboard_arrow_up</mat-icon>
             </button>

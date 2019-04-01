@@ -185,8 +185,6 @@ export class ListViewComponent implements OnInit {
           }
         });
       }
-
-      // console.log('listsArray:', this.listsArray);
     });
   }
 
@@ -278,13 +276,25 @@ export class ListViewComponent implements OnInit {
 
   getUncheckedItems(selectedList: CheckList): number {
     let selectedItems = 0;
-    console.log('selectedItems', selectedItems);
     selectedList.list.forEach(entry => {
       if (entry.checked) {
         selectedItems++;
       }
     });
     return selectedList.list.length - selectedItems;
+  }
+
+  editQuantityChanged(event: any): void {
+    this.listLoading = true;
+    this.setDocument(
+      this.selectedListId,
+      this.selectedList.name,
+      this.selectedList.showQuantityInputs,
+      this.selectedList.list,
+      this.selectedList.roles)
+    .then(() => {
+      this.listLoading = false;
+    });
   }
 
   private setDocument(id: string, listName: string, showQuantityInputs: boolean, items: any[], roles: any): Promise<void> {
