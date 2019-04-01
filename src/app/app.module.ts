@@ -13,6 +13,7 @@ import { SelectValueDialogComponent } from './dialogs/select-value-dialog.compon
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
 import { ListViewComponent } from './list-view/list-view.component';
 import { LoginComponent } from './login/login.component';
+import { NotificationSnackBarComponent } from './login/login.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { AuthService } from './auth.service';
 
@@ -27,7 +28,9 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     AddFriendDialogComponent,
     SetValueDialogComponent,
     SelectValueDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    NotificationSnackBarComponent,
+    LoginComponent
   ],
   declarations: [
     AppComponent,
@@ -36,7 +39,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
     SelectValueDialogComponent,
     ConfirmDialogComponent,
     ListViewComponent,
-    LoginComponent
+    LoginComponent,
+    NotificationSnackBarComponent
   ],
   imports: [
     BrowserModule,
