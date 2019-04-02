@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  isLoading: boolean = true;
   loginForm: FormGroup;
   signUpForm: FormGroup;
 
@@ -34,6 +35,8 @@ export class LoginComponent implements OnInit {
     this.user.subscribe(user => {
       if (user) {
         this.router.navigate(['/listview']);
+      } else {
+        this.isLoading = false;
       }
     });
   }

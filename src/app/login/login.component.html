@@ -1,37 +1,42 @@
 <div class="login-container">
-  <h1>Simple Checklist</h1>
-  <mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Login
-      </ng-template>
-      <div class="input-form" [formGroup]="loginForm">
-        <mat-form-field>
-          <input matInput placeholder="Email" formControlName="emailLogin" required>
-        </mat-form-field>
-        <mat-form-field>
-          <input type="password" matInput placeholder="Password" formControlName="passwordLogin" required>
-        </mat-form-field>
-        <button mat-raised-button [disabled]="!loginForm.valid" (click)="signIn()" color="primary">Login</button>
-      </div>
-    </mat-tab>
-
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Sign Up
-      </ng-template>
-      <div class="input-form" [formGroup]="signUpForm">
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="!isLoading" class="content-container">
+    <h1>Simple Checklist</h1>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Login
+        </ng-template>
+        <div class="input-form" [formGroup]="loginForm">
           <mat-form-field>
-            <input matInput placeholder="Username" formControlName="usernameSignUp" required>
+            <input matInput placeholder="Email" formControlName="emailLogin" required>
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Email" formControlName="emailSignUp" required>
+            <input type="password" matInput placeholder="Password" formControlName="passwordLogin" required>
           </mat-form-field>
-          <mat-form-field>
-            <input type="password" matInput placeholder="Password" formControlName="passwordSignUp" required>
-          </mat-form-field>
-          <button mat-raised-button [disabled]="!signUpForm.valid" (click)="signUp()" color="primary">Sign Up</button>
+          <button mat-raised-button [disabled]="!loginForm.valid" (click)="signIn()" color="primary">Login</button>
         </div>
-    </mat-tab>
-  </mat-tab-group>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Sign Up
+        </ng-template>
+        <div class="input-form" [formGroup]="signUpForm">
+            <mat-form-field>
+              <input matInput placeholder="Username" formControlName="usernameSignUp" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Email" formControlName="emailSignUp" required>
+            </mat-form-field>
+            <mat-form-field>
+              <input type="password" matInput placeholder="Password" formControlName="passwordSignUp" required>
+            </mat-form-field>
+            <button mat-raised-button [disabled]="!signUpForm.valid" (click)="signUp()" color="primary">Sign Up</button>
+          </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>

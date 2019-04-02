@@ -3,9 +3,15 @@
 .login-container {
     height: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 
     h1 {
         font-family: 'Great Vibes', cursive;
@@ -18,5 +24,10 @@
         display: flex;
         flex-direction: column;
         margin-top: $default-margin;
+    }
+
+    .loading-container {
+        height: 40px;
+        width: 40px;
     }
 }
