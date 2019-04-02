@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -12,12 +13,28 @@ export class AuthService {
   user: Observable<firebase.User>;
   userCollection: AngularFirestoreCollection<any>;
 
-  constructor(private firebaseAuth: AngularFireAuth, private afs: AngularFirestore) {
+  constructor(
+    private firebaseAuth: AngularFireAuth,
+    private afs: AngularFirestore,
+    public snackBar: MatSnackBar) {
     this.user = firebaseAuth.authState;
     this.userCollection = this.afs.collection('users');
   }
 
-  signup(username: string, email: string, password: string) {
+  doGoogleLogin() {
+    return new Promise<any>((resolve, reject) => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
+      this.firebaseAuth.auth
+      .signInWithPopup(provider)
+      .then(res => {
+        resolve(res);
+      });
+    });
+  }
+
+  signup(username: string, email: string, password: string, snackBar: MatSnackBar) {
     this.firebaseAuth
     .auth
     .createUserWithEmailAndPassword(email, password)
@@ -31,10 +48,11 @@ export class AuthService {
     })
     .catch(error => {
       console.log('Something went wrong:', error.message);
+      snackBar.open('Can not sign up: ' + error.message, 'Dismiss', {duration: 3000});
     });
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string, snackBar: MatSnackBar) {
     this.firebaseAuth
     .auth
     .signInWithEmailAndPassword(email, password)
@@ -43,6 +61,7 @@ export class AuthService {
     })
     .catch(error => {
       console.log('Can not login:', error.message);
+      snackBar.open('Can not sign in: ' + error.message, 'Dismiss', {duration: 3000});
     });
   }
 

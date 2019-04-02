@@ -1,6 +1,6 @@
 <div class="login-container">
   <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner></mat-spinner>
+    <mat-spinner [diameter]="40"></mat-spinner>
   </div>
   <div *ngIf="!isLoading" class="content-container">
     <h1>Simple Checklist</h1>
@@ -38,5 +38,7 @@
           </div>
       </mat-tab>
     </mat-tab-group>
+    <div class="or-separator"><span>- or -</span></div>
+    <button class="google-login-button" mat-raised-button color="primary" (click)="signInWithGoogle()"><img src="../../assets/icons/btn_google_light_normal_ios.svg">Sign in with Google</button>
   </div>
 </div>
