@@ -61,6 +61,7 @@ export class ListViewComponent implements OnInit {
 
   editMode = false;
   listLoading = false;
+  isListOfSignedInUser = false;
 
   objectRef = Object;
 
@@ -188,8 +189,12 @@ export class ListViewComponent implements OnInit {
     });
   }
 
-  isListOfSignedInUser(): boolean {
-    return this.selectedListOwnerId === this.signedInUser.uid;
+  setIsListOfSignedInUser(): void {
+    setTimeout(() => {
+      console.log('selectedListOwnerId', this.selectedListOwnerId);
+      console.log('signedInUser.uid', this.signedInUser.uid);
+      this.isListOfSignedInUser = this.selectedListOwnerId === this.signedInUser.uid;
+    }, 1000);
   }
 
   openSetTitleDialog(): void {
@@ -332,6 +337,7 @@ export class ListViewComponent implements OnInit {
       if (list) {
         this.selectedListId = listId;
         this.selectedList = list;
+        this.setIsListOfSignedInUser();
       }
     });
   }

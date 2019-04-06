@@ -1,4 +1,4 @@
-<div [class.edit-mode]="editMode"  class="list-view-container">
+ <div [class.edit-mode]="editMode"  class="list-view-container">
   <div class='header-bar'>
     <button mat-icon-button class="list-menu-button" [disabled]="editMode" [matMenuTriggerFor]="appMenu">
       <mat-icon>menu</mat-icon>
@@ -47,13 +47,13 @@
       <mat-card-header class="item-list-card-header">
         <h1 (click)="openSetTitleDialog()" matBadge="{{getUncheckedItems(selectedList)}}" matBadgeOverlap="false" [matBadgeHidden]="getUncheckedItems(selectedList) === 0">{{ selectedList.name }}</h1>
         <mat-icon class="check-icon-outline" *ngIf="getUncheckedItems(selectedList) === 0">check_circle_outline</mat-icon>
-        <button mat-icon-button (click)="openAddFriendDialog()" class="owners-title-button" [disabled]="editMode || !isListOfSignedInUser()">
+        <button mat-icon-button (click)="openAddFriendDialog()" class="owners-title-button" [disabled]="editMode || !isListOfSignedInUser">
           <mat-icon>person_add</mat-icon>
         </button>
         <button mat-icon-button (click)="onEditList()" class="edit-list-title-button" [disabled]="editMode">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button (click)="onDeleteList()" class="delete-list-title-button" [disabled]="editMode || !isListOfSignedInUser()">
+        <button mat-icon-button (click)="onDeleteList()" class="delete-list-title-button" [disabled]="editMode || !isListOfSignedInUser">
           <mat-icon>delete</mat-icon>
         </button>
         <mat-checkbox (click)="toggleMassSelection()" class="select-all-checkbox" [(ngModel)]="selectAllChecked" color="primary"></mat-checkbox>
