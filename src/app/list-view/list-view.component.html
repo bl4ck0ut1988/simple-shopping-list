@@ -82,7 +82,10 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              {{item.name}}
+              <mat-form-field class="name-form-field">
+                <input matInput type="text" class="form-control name-input" id="itemEdit" [(ngModel)]="item.name"
+                  name="itemEdit">
+              </mat-form-field>
             <button [disabled]="i <= 0" class="move-up-button" mat-icon-button (click)="moveItemUp(i)">
               <mat-icon>keyboard_arrow_up</mat-icon>
             </button>

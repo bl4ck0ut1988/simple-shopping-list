@@ -159,11 +159,9 @@ export class ListViewComponent implements OnInit {
       this.auth.getUser()
     ).subscribe(([snapshotChanges, user]) => {
       this.signedInUser = user;
-      // console.log('USER', user);
 
       if (user.uid) {
         this.listsArray = [];
-        // console.log('CHanges', snapshotChanges);
         snapshotChanges.forEach(change => {
           const roles = change.payload.doc.data().roles;
           if (Object.keys(roles).some(key => {

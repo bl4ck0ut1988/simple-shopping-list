@@ -57,7 +57,7 @@ export class AuthService {
     .auth
     .signInWithEmailAndPassword(email, password)
     .then(value => {
-      console.log('Login Successful!', value);
+      console.log('Login Successful!', value.user.uid);
     })
     .catch(error => {
       console.log('Can not login:', error.message);
